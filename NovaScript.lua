@@ -129,13 +129,13 @@ settings_main:toggle(T("no_notif"), {}, "", function(on)
     notif_off = on
 end)
 
-settings_main.action(T("check_for_update"), {}, T("check_for_update_info"), function()
+settings_main:action(T("check_for_update"), {}, T("check_for_update_info"), function()
     auto_update_config.check_interval = 0
     if auto_updater.run_auto_update(auto_update_config) then
-        util.toast(T("no_updates_found"))
+        notify(T("no_updates_found"))
     end
 end)
-settings_main.action(T("clean_reinstall"), {}, T("clean_reinstall_info"), function()
+settings_main:action(T("clean_reinstall"), {}, T("clean_reinstall_info"), function()
     auto_update_config.clean_reinstall = true
     auto_updater.run_auto_update(auto_update_config)
 end)
