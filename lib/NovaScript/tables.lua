@@ -54,7 +54,7 @@ tables.explosion_types_name = {
     "Explosive Ammo",
     "Apc Shell",
     "Bomb Cluster",
-    "bumb Gas",
+    "bomb Gas",
     "Bomb Incendiary",
     "Bomb Standard",
     "Torpedo",
@@ -69,7 +69,7 @@ tables.explosion_types_name = {
     "Explosive Ammo Shotgun",
     "Oppressor 2",
     "Mortar Kinetic",
-    "Vehicle MIne Kinetic",
+    "Vehicle Mine Kinetic",
     "Vehicle Mine EMP",
     "Vehicle Mine Spike",
     "Vehicle Mine Slick",
@@ -90,6 +90,7 @@ tables.explosion_types_name = {
     "Submarine Big",
     "Emp Launcher",
 }
+
 
 --credits to lance for this--
 tables.all_weapon_hashes = {}

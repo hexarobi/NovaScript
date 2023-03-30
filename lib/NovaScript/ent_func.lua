@@ -47,7 +47,6 @@ function ent_func.get_entity_control(entity)
     return entity
 end
 
---not used atm just in the code for later--
 function ent_func.get_entity_control_onces(entity)
     --looks if the entity exists--
     if entity > 0 then
@@ -58,9 +57,14 @@ function ent_func.get_entity_control_onces(entity)
         --if we have not yet have control of the entity then get the network id from the entity and set that you can take control--
         local network_id = NETWORK.NETWORK_GET_NETWORK_ID_FROM_ENTITY(entity)
         NETWORK.SET_NETWORK_ID_CAN_MIGRATE(network_id, true)
+        has_control = NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(entity)
     end
     --return the entity--
-    return entity
+    if has_control then 
+        return entity
+    else
+        return false
+    end
 end
 
 --based on how jacks does it but just got the idea with the spectating and the rest i did myself so no skid just idea--
@@ -163,6 +167,36 @@ function ent_func.getClosestPlayer(myPos)
     if closest_player ~= nil and closest_player ~= players.user() then
         return closest_player
     end
+end
+
+function ent_func.slerp(q1, q2, t)
+    local cosTheta = q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w
+    local startInterp, finishInterp
+
+    if cosTheta < 0.0 then
+        cosTheta = -cosTheta
+        q2.x = -q2.x
+        q2.y = -q2.y
+        q2.z = -q2.z
+        q2.w = -q2.w
+    end
+
+    if (1.0 - cosTheta) > 0.0001 then
+        local theta = math.acos(cosTheta)
+        local sinTheta = math.sin(theta)
+        startInterp = math.sin((1.0 - t) * theta) / sinTheta
+        finishInterp = math.sin(t * theta) / sinTheta
+    else
+        startInterp = 1.0 - t
+        finishInterp = t
+    end
+
+    local x = startInterp * q1.x + finishInterp * q2.x
+    local y = startInterp * q1.y + finishInterp * q2.y
+    local z = startInterp * q1.z + finishInterp * q2.z
+    local w = startInterp * q1.w + finishInterp * q2.w
+
+    return {x = x, y = y, z = z, w = w}
 end
 
 --credit to lance for this--
