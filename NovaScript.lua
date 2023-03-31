@@ -60,6 +60,13 @@ local auto_update_config = {
             script_relpath="lib/NovaScript/tables.lua",
             check_interval=default_check_interval,
         },
+
+        {
+            name="quaternionLib",
+            source_url="https://raw.githubusercontent.com/NovaPlays134/NovaScript/main/lib/quaternionLib.lua",
+            script_relpath="lib/quaternionLib.lua",
+            check_interval=default_check_interval,
+        },
     }
 }
 auto_updater.run_auto_update(auto_update_config)
@@ -1099,20 +1106,20 @@ local all_vehicles = world_main:list(T("All Vehicles"))
 
 --explode all vehicles--
 all_vehicles:toggle_loop(T("Explode All Vehicles"), {}, "", function()
-local vehicles = entities.get_all_vehicles_as_handles()
-local user_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
+    local vehicles = entities.get_all_vehicles_as_handles()
+    local user_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
     for _, vehicle in pairs(vehicles) do
         if vehicle ~= user_vehicle then
-            VEHICLE.EXPLODE_VEHICLE(vehicle, true, false)
+            local vehicle_pos = ENTITY.GET_ENTITY_COORDS(vehicle, true)
+            FIRE.ADD_EXPLOSION(vehicle_pos.x, vehicle_pos.y, vehicle_pos.z, 1, 1.0, true, false, 0.0, false)
         end
     end
-    util.yield(2000)
 end)
 
 --freeze all vehicles--
 all_vehicles:toggle_loop(T("Freeze All Vehicles"), {}, "", function()
-local vehicles = entities.get_all_vehicles_as_handles()
-local user_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
+    local vehicles = entities.get_all_vehicles_as_handles()
+    local user_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
     for _, vehicle in pairs(vehicles) do
         if vehicle ~= user_vehicle then
             ENTITY.FREEZE_ENTITY_POSITION(vehicle, true)
@@ -1127,8 +1134,8 @@ end)
 
 --no gravity for all vehicles--
 all_vehicles:toggle_loop(T("Turn Off Gravity For All Vehicles"), {}, "", function()
-local vehicles = entities.get_all_vehicles_as_handles()
-local user_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
+    local vehicles = entities.get_all_vehicles_as_handles()
+    local user_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
     for _, vehicle in pairs(vehicles) do
         if vehicle ~= user_vehicle then
             VEHICLE.SET_VEHICLE_GRAVITY(vehicle, false)
@@ -1143,8 +1150,8 @@ end)
 
 --let all vehicles jump--
 all_vehicles:toggle_loop(T("Jumping Vehicles"), {}, "", function()
-local vehicles = entities.get_all_vehicles_as_handles()
-local user_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
+    local vehicles = entities.get_all_vehicles_as_handles()
+    local user_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
     for _, vehicle in pairs(vehicles) do
         if vehicle ~= user_vehicle then
             ENTITY.APPLY_FORCE_TO_ENTITY(vehicle, 3, 0, 0, 10, 0.0, 0.0, 0.0, 0, true, false, true, false, true)
@@ -1155,8 +1162,8 @@ end)
 
 --vehicle chaos, trows vehicles everywere--
 all_vehicles:toggle_loop(T("Vehicle Chaos"), {}, "", function()
-local vehicles = entities.get_all_vehicles_as_handles()
-local user_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
+    local vehicles = entities.get_all_vehicles_as_handles()
+    local user_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
     for _, vehicle in pairs(vehicles) do
         if vehicle ~= user_vehicle then
             ENTITY.APPLY_FORCE_TO_ENTITY(vehicle, 3, math.random(20, 100), math.random(20, 100), math.random(20, 100), 0.0, 0.0, 0.0, 0, true, false, true, false, true)
@@ -1167,8 +1174,8 @@ end)
 
 --turns all the vehicles 180 in the x axis--
 all_vehicles:toggle_loop(T("Turn all Vehicles on Their back"), {}, "", function()
-local vehicles = entities.get_all_vehicles_as_handles()
-local user_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
+    local vehicles = entities.get_all_vehicles_as_handles()
+    local user_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
     for _, vehicle in pairs(vehicles) do
         if vehicle ~= user_vehicle then
             ENTITY.SET_ENTITY_ROTATION(vehicle, 0, 180, 0, 1, true)
