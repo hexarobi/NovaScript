@@ -129,21 +129,41 @@ function ent_func.get_entity_player_is_aiming_at(player)
 end
 
 --thanks to noshirt.cat for helping me with this--
-function ent_func.getClosestVehicle(myPos)
+function ent_func.getClosestVehicle(pos)
 	local closestDist = 999999999999
-	local closestVeh = nil
-	for _, veh in pairs(entities.get_all_vehicles_as_pointers()) do
+	local closestveh = nil
+    for entities.get_all_vehicles_as_pointers() as veh do
 	      local vehpos = entities.get_position(veh)
-	      local dist = myPos:distance(vehpos)
+	      local dist = pos:distance(vehpos)
 	      if (dist < closestDist) then
 	    	closestDist = dist
-	    	closestVeh = veh
+	    	closestveh = veh
 	      end
     end
-    if closestVeh ~= nil then
-        return entities.pointer_to_handle(closestVeh)
+    if closestveh ~= nil then
+        return entities.pointer_to_handle(closestveh)
     end
 end
+
+function ent_func.getClosestPed(pos)
+	local closestDist = 999999999999
+	local closestped = nil
+    for entities.get_all_peds_as_pointers() as ped do
+        local ped_handle = entities.pointer_to_handle(ped)
+        if not ENTITY.IS_ENTITY_DEAD(ped_handle) and not PED.IS_PED_IN_ANY_VEHICLE(ped_handle) and ped_handle ~= players.user_ped() then
+	      local pedpos = entities.get_position(ped)
+	      local dist = pos:distance(pedpos)
+	      if (dist < closestDist) then
+	    	closestDist = dist
+	    	closestped = ped_handle
+	      end
+        end
+    end
+    if closestped ~= nil then
+        return closestped
+    end
+end
+
 --changed it a bit but credit to SATTY for this--
 function ent_func.getClosestPlayer(myPos)
     local closestDist = 999999999999
@@ -152,15 +172,15 @@ function ent_func.getClosestPlayer(myPos)
     if myVehicle == 0 then
         myVehicle = 1
     end
-    for _, player in players.list(false, true, true) do
-		local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player)
+    for players.list(false, true, true) as pid do
+		local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
 		if not ENTITY.IS_ENTITY_DEAD(ped) then
-            local playerpos = players.get_position(player)
+            local playerpos = players.get_position(pid)
             local dist = ent_func.get_distance_between(myPos, playerpos)
             local playerVehicle = ent_func.get_vehicle_from_ped(ped)
-            if (dist < closestDist) and (playerVehicle ~= myVehicle) and not players.is_in_interior(player) then
+            if (dist < closestDist) and (playerVehicle ~= myVehicle) and not players.is_in_interior(pid) then
                 closestDist = dist
-                closest_player = player
+                closest_player = pid
             end
 		end
     end
@@ -212,6 +232,16 @@ function ent_func.get_offset_from_gameplay_camera(distance)
 	return destination
 end
 
+function ent_func.get_model_hight(hash)
+    local minimum = memory.alloc(24)
+    local maximum = memory.alloc(24)
+    MISC.GET_MODEL_DIMENSIONS(hash, minimum, maximum)
+    local minZ = v3.getZ(minimum)
+    local maxZ = v3.getZ(maximum)
+    local sizeZ = maxZ - minZ
+    return sizeZ
+end
+
 --both draw line from x to x not used but just here--
 function ent_func.draw_line_from_ped_to_ped(ped)
     local pos_player = PED.GET_PED_BONE_COORDS(ped, 31086, 0.0, 0.0, 0.0)
@@ -254,21 +284,21 @@ local function nuke_expl1(Position)
         {10, 30, 0}, {30, 10, 0}, {-30, -10, 0}, {-10, -30, 0}, {-10, 30, 0}, {-30, 10, 0}, {30, -10, 0}, {10, -30, 0},
         {0, 0, 10}, {0, 0, -10}, {0, 0, 20}, {0, 0, -20}
     }
-    for _, offset in ipairs(offsets) do
+    for i, offset in offsets do
         FIRE.ADD_EXPLOSION(Position.x + offset[1], Position.y + offset[2], Position.z + offset[3], 59, 1.0, true, false, 1.0, false)
     end
 end
 
 local function nuke_expl2(Position)
     local offsets = {{0,0,-10}, {10,0,-10}, {0,10,-10}, {10,10,-10}, {-10,0,-10}, {0,-10,-10}, {-10,-10,-10}, {10,-10,-10}, {-10,10,-10}}
-    for _, offset in ipairs(offsets) do
+    for i, offset in offsets do
         FIRE.ADD_EXPLOSION(Position.x + offset[1], Position.y + offset[2], Position.z + offset[3], 59, 1.0, true, false, 1.0, false)
     end
 end
 
 local function nuke_expl3(Position)
     local offsets = {{10,0,0}, {0,10,0}, {10,10,0}, {-10,0,0}, {0,-10,0}, {-10,-10,0}, {10,-10,0}, {-10,10,0}, {0,0,0}}
-    for _, offset in ipairs(offsets) do
+    for i, offset in offsets do
         FIRE.ADD_EXPLOSION(Position.x + offset[1], Position.y + offset[2], Position.z + offset[3], 59, 1.0, true, false, 1.0, false)
     end
 end
@@ -302,7 +332,7 @@ function ent_func.create_nuke_explosion(Position)
 
     local size = 1.5
     local positionsZ = {1, 3, 5, 7, 10, 12, 15, 17, 20, 22, 25, 27, 30, 32, 35, 37, 40, 42, 45, 47, 50, 52, 55, 57, 59, 61, 63, 65, 70, 75, 75, 75, 75, 80, 80}
-    for i, pos in ipairs(positionsZ) do
+    for i, pos in positionsZ do
         if i == 3 or i == 5 or i == 7 or i == 9 or i == 11 or i == 13 or i == 15 or i == 17 or i == 19 or i == 21 or i == 23 or i == 25 or i == 29 or i == 30 then
         FIRE.ADD_EXPLOSION(Position.x, Position.y, Position.z+pos, 59, 1.0, true, false, 1.0, false)
         end
@@ -316,8 +346,8 @@ function ent_func.create_nuke_explosion(Position)
     end
 
     nuke_expl3(Position)
-
-	for _, pid in pairs(players.list(false, true, true)) do
+       
+    for players.list(false, true, true) as pid do
         local distance = ent_func.get_distance_between(players.get_position(pid), Position)
 		if distance < 200 then
 			local pid_pos = players.get_position(pid)
@@ -326,19 +356,18 @@ function ent_func.create_nuke_explosion(Position)
 	end
 
 	local peds = entities.get_all_peds_as_handles()
-	for _, ped in pairs(peds) do
-		if ent_func.get_distance_between(ped, Position) > 200 and ent_func.get_distance_between(ped, Position) < 400 and ped ~= players.user_ped() then
+    for peds as ped do
+		if ent_func.get_distance_between(ped, Position) > 200 and ent_func.get_distance_between(ped, Position) < 550 and ped ~= players.user_ped() then
 			local ped_pos = ENTITY.GET_ENTITY_COORDS(ped)
-			FIRE.ADD_EXPLOSION(ped_pos.x, ped_pos.y, ped_pos.z, 3, 1.0, true, true, 0.1, false)
+			FIRE.ADD_EXPLOSION(ped_pos.x, ped_pos.y, ped_pos.z, 1, 100, true, true, 0.1, false)
 		end
 	end
     
 	local vehicles = entities.get_all_vehicles_as_handles()
-    for _, vehicle in pairs(vehicles) do
-		if ent_func.get_distance_between(vehicle, Position) < 400 then
-			VEHICLE.EXPLODE_VEHICLE(vehicle, true, false)
-		elseif ent_func.get_distance_between(vehicle, Position) > 200 and ent_func.get_distance_between(vehicle, Position) < 400 then
-			VEHICLE.EXPLODE_VEHICLE(vehicle, true, false)
+    for vehicles as vehicle do
+		if ent_func.get_distance_between(vehicle, Position) < 550 then
+            local vehicle_pos = ENTITY.GET_ENTITY_COORDS(vehicle)
+			FIRE.ADD_EXPLOSION(vehicle_pos.x, vehicle_pos.y, vehicle_pos.z, 1, 100, true, true, 0.1, false)
 		end
 	end
 end

@@ -26,7 +26,7 @@ if auto_updater == true then error("Invalid auto-updater lib. Please delete your
 
 local default_check_interval = 604800
 local auto_update_config = {
-    source_url="https://raw.githubusercontent.com/NovaPlays134/NovaScript/main/NovaScript.lua",
+    source_url="https://raw.githubusercontent.com/NovaPlays134/NovaScript/main/NovaScript.pluto",
     script_relpath=SCRIPT_RELPATH,
     switch_to_branch=selected_branch,
     verify_file_begins_with="--",
@@ -35,15 +35,15 @@ local auto_update_config = {
     dependencies={
         {
             name="ent_func",
-            source_url="https://raw.githubusercontent.com/NovaPlays134/NovaScript/main/lib/NovaScript/ent_func.lua",
-            script_relpath="lib/NovaScript/ent_func.lua",
+            source_url="https://raw.githubusercontent.com/NovaPlays134/NovaScript/main/lib/NovaScript/ent_func.pluto",
+            script_relpath="lib/NovaScript/ent_func.pluto",
             check_interval=default_check_interval,
         },
 
         {
             name="translations",
-            source_url="https://raw.githubusercontent.com/NovaPlays134/NovaScript/main/lib/NovaScript/NovaS_translations.lua",
-            script_relpath="lib/NovaScript/NovaS_translations.lua",
+            source_url="https://raw.githubusercontent.com/NovaPlays134/NovaScript/main/lib/NovaScript/NovaS_translations.pluto",
+            script_relpath="lib/NovaScript/NovaS_translations.pluto",
             check_interval=default_check_interval,
         },
 
@@ -56,15 +56,8 @@ local auto_update_config = {
 
 		{
             name="tables",
-            source_url="https://raw.githubusercontent.com/NovaPlays134/NovaScript/main/lib/NovaScript/tables.lua",
-            script_relpath="lib/NovaScript/tables.lua",
-            check_interval=default_check_interval,
-        },
-
-        {
-            name="quaternionLib",
-            source_url="https://raw.githubusercontent.com/NovaPlays134/NovaScript/main/lib/quaternionLib.lua",
-            script_relpath="lib/quaternionLib.lua",
+            source_url="https://raw.githubusercontent.com/NovaPlays134/NovaScript/main/lib/NovaScript/tables.pluto",
+            script_relpath="lib/NovaScript/tables.pluto",
             check_interval=default_check_interval,
         },
     }
@@ -73,6 +66,8 @@ auto_updater.run_auto_update(auto_update_config)
 
 util.keep_running()
 util.require_natives(1663599433)
+util.ensure_package_is_installed('lua/ScaleformLib')
+util.ensure_package_is_installed('lua/quaternionLib')
 -------------------
 --REQUIRING FILES--
 -------------------
@@ -122,7 +117,7 @@ function control_vehicle(pid, output_toast, callback, opts)
 end
 
 --translates the explosion type names table--
-for i, name in ipairs(tables.explosion_types_name) do
+for i, name in tables.explosion_types_name do
     tables.explosion_types_name[i] = T(name)
 end
 
@@ -217,6 +212,229 @@ settings_main:hyperlink(T("Join The Discord Server"),"https://discord.gg/CNf6Y6U
 -------------
 --SELF LIST--
 -------------
+menu.my_root():slider("Zoom", {}, "Will only work on guns that have the zoom option.", 10, 100, 10, 1, function(count)
+    CAM.SET_FIRST_PERSON_AIM_CAM_ZOOM_FACTOR(count/10)
+end)
+
+local scaleform = require('ScaleformLib')
+local sf = scaleform('instructional_buttons')
+
+--the buttons for the hulk option--
+function hulk_buttons()
+    sf.SET_DATA_SLOT(3, PAD.GET_CONTROL_INSTRUCTIONAL_BUTTONS_STRING(0, 22, true), "Jump")
+    sf.SET_DATA_SLOT(2, PAD.GET_CONTROL_INSTRUCTIONAL_BUTTONS_STRING(0, 24, true), "Smash")
+    sf.SET_DATA_SLOT(1, PAD.GET_CONTROL_INSTRUCTIONAL_BUTTONS_STRING(0, 38, true), "Throw Vehicle")
+    sf.SET_DATA_SLOT(0, PAD.GET_CONTROL_INSTRUCTIONAL_BUTTONS_STRING(0, 323, true), "Throw Ped")
+    sf.DRAW_INSTRUCTIONAL_BUTTONS()
+    sf:draw_fullscreen()
+end
+--hulk list--
+local hulk_mode_list = self_main:list(T("Hulk Mode"))
+
+--hulk mode option--
+local hulk_values = {
+    jump_bool = false,
+    smash_bool = false,
+    attached_vehicle = nil,
+    hands_up_vehicle = false,
+    attached_ped = nil,
+    hands_up_ped = false,
+    show_hulk_controls = true,
+    jump_distance = 100,
+    jump_height = 60,
+    downward_force = 200,
+    smash_radius = 10,
+    throw_vehicle_speed = 100,
+    throw_ped_speed = 500,
+}
+
+hulk_mode_list:toggle_loop(T("Hulk Mode"), {}, T("Lets you use abilities that the hulk has super jump, smash (will only work when your in the air), explosive punch and throw vehicles/peds.\nThis will also enable godmode."), function()
+    --turn gm on when its not on already--
+    if not menu.ref_by_command_name("godmode").value then
+        menu.trigger_commands("godmode" .. " on")
+    end
+    --show hulk controls--
+    if hulk_values.show_hulk_controls then
+        hulk_buttons()
+    end
+    PED.SET_PED_CAN_RAGDOLL(players.user_ped(), false)
+    local hight_above_ground = ENTITY.GET_ENTITY_HEIGHT_ABOVE_GROUND(players.user_ped())
+    --jumping--
+    if PAD.IS_CONTROL_PRESSED(0, 22) and not ENTITY.IS_ENTITY_IN_AIR(players.user_ped()) and hight_above_ground <= 5 then
+        local fwd_vect = ENTITY.GET_ENTITY_FORWARD_VECTOR(players.user_ped())
+        fwd_vect:mul(hulk_values.jump_distance)
+        ENTITY.APPLY_FORCE_TO_ENTITY(players.user_ped(), 3, fwd_vect.x, fwd_vect.y, hulk_values.jump_height, 0.0, 0.0, 0.0, 0.0, false, false, true, false, false)
+        hulk_values.jump_bool = true
+    end
+    --smash--
+    if PAD.IS_CONTROL_PRESSED(0, 24) and hight_above_ground >= 10 then
+        ENTITY.APPLY_FORCE_TO_ENTITY(players.user_ped(), 3, 0.0, 0.0, -hulk_values.downward_force, 0.0, 0.0, 0.0, 0.0, false, false, true, false, false)
+        hulk_values.smash_bool = true
+    end
+    --smash effect when on ground--
+    if hulk_values.jump_bool and hight_above_ground <= 1 then
+        TASK.CLEAR_PED_TASKS_IMMEDIATELY(players.user_ped())
+        hulk_values.jump_bool = false
+        if hulk_values.smash_bool then
+            ent_func.use_fx_asset("core")
+            local smoke_landing = GRAPHICS.START_PARTICLE_FX_LOOPED_ON_ENTITY("proj_grenade_smoke", players.user_ped(), 0.0, 0.0, -2, 0.0, 0.0, 0.0, 10, false, false, false)
+            --vehicles--
+            local vehicles = entities.get_all_vehicles_as_pointers()
+            for vehicles as vehicle do
+                local vehicle_handle = entities.pointer_to_handle(vehicle)
+                if ent_func.get_distance_between(vehicle_handle, players.user_ped()) <= hulk_values.smash_radius then
+                    local vehicle_pos = ENTITY.GET_ENTITY_COORDS(vehicle_handle)
+                    FIRE.ADD_EXPLOSION(vehicle_pos.x, vehicle_pos.y, vehicle_pos.z, 1, 1, false, true, 0.0, false)
+                    local rel = v3.new(vehicle_pos)
+                    --subtract your pos from rel--
+                    rel:sub(players.get_position(players.user()))
+                    --scales the v3 to have a length of 1--
+                    rel:normalise()
+                    rel:mul(100)
+                    ENTITY.APPLY_FORCE_TO_ENTITY(vehicle_handle, 3, rel.x, rel.y, rel.z, 0.0, 0.0, 10, 0, false, false, true, false, false)
+                end
+            end
+            --peds--
+            local peds = entities.get_all_peds_as_pointers()
+            for _, ped in pairs(peds) do
+                local ped_handle = entities.pointer_to_handle(ped)
+                if ent_func.get_distance_between(ped_handle, players.user_ped()) <= hulk_values.smash_radius then
+                    local ped_pos = ENTITY.GET_ENTITY_COORDS(ped_handle)
+                    FIRE.ADD_EXPLOSION(ped_pos.x, ped_pos.y, ped_pos.z, 1, 1, false, true, 0.0, false)
+                    local rel = v3.new(ped_pos)
+                    --subtract your pos from rel--
+                    rel:sub(players.get_position(players.user()))
+                    --scales the v3 to have a length of 1--
+                    rel:normalise()
+                    rel:mul(1000)
+                    PED.SET_PED_TO_RAGDOLL(ped_handle, 2500, 0, 0, false, false, false)
+                    ENTITY.APPLY_FORCE_TO_ENTITY(ped_handle, 3, rel.x, rel.y, rel.z, 0.0, 0.0, 10, 0, false, false, true, false, false)
+                end
+            end
+            util.yield(1000)
+            GRAPHICS.STOP_PARTICLE_FX_LOOPED(smoke_landing, false)
+            hulk_values.smash_bool = false
+        end
+    end
+
+    --explosive punch--
+    local hitCoords = v3.new()
+    if WEAPON.GET_PED_LAST_WEAPON_IMPACT_COORD(players.user_ped(), hitCoords) and WEAPON.GET_SELECTED_PED_WEAPON(players.user_ped()) == -1569615261 then
+    	FIRE.ADD_EXPLOSION(hitCoords.x, hitCoords.y, hitCoords.z, 1, 1, true, true, 0.0, false)
+    end
+
+    --concept of lancescripts throw vehicle option--
+    if PAD.IS_CONTROL_JUST_RELEASED(0, 38) and not PED.IS_PED_IN_ANY_VEHICLE(players.user_ped(), true) and hulk_values.hands_up_ped == false then
+        if hulk_values.hands_up_vehicle == false then
+            if hulk_values.attached_vehicle == nil then
+                if PED.IS_PED_ON_FOOT(players.user_ped()) and not PED.IS_PED_RAGDOLL(players.user_ped()) then
+                    local closest_vehicle = ent_func.getClosestVehicle(players.get_position(players.user()))
+                    if closest_vehicle ~= nil then
+                        local dist = ent_func.get_distance_between(closest_vehicle, players.user_ped())
+                        if dist <= 5 then 
+                            ent_func.has_anim_dict_loaded("missminuteman_1ig_2")
+                            TASK.TASK_PLAY_ANIM(players.user_ped(), "missminuteman_1ig_2", "handsup_enter", 8.0, 0.0, -1, 50, 0, false, false, false)
+                            util.yield(500)
+                            ENTITY.SET_ENTITY_COLLISION(closest_vehicle, false, true)
+                            local hight = ent_func.get_model_hight(ENTITY.GET_ENTITY_MODEL(closest_vehicle))
+                            ENTITY.ATTACH_ENTITY_TO_ENTITY(closest_vehicle, players.user_ped(), 0, 0.0, 0.0, hight, 180, 180, -180, true, false, true, false, 0, true)
+                            hulk_values.attached_vehicle = closest_vehicle
+                            hulk_values.hands_up_vehicle = true
+                        end
+                    end
+                end
+            else
+                TASK.CLEAR_PED_TASKS_IMMEDIATELY(players.user_ped())
+                hulk_values.hands_up_vehicle = false
+            end
+        else
+            ENTITY.DETACH_ENTITY(hulk_values.attached_vehicle)
+            VEHICLE.SET_VEHICLE_FORWARD_SPEED(hulk_values.attached_vehicle, hulk_values.throw_vehicle_speed)
+            ENTITY.SET_ENTITY_NO_COLLISION_ENTITY(hulk_values.attached_vehicle, players.user_ped(), false)
+            TASK.CLEAR_PED_TASKS_IMMEDIATELY(players.user_ped())
+            ent_func.has_anim_dict_loaded("melee@unarmed@streamed_core")
+            TASK.TASK_PLAY_ANIM(players.user_ped(), "melee@unarmed@streamed_core", "heavy_punch_a", 8.0, 8.0, -1, 0, 0.3, false, false, false)
+            hulk_values.attached_vehicle = nil
+            hulk_values.hands_up_vehicle = false
+        end
+    end
+
+    --concept of lancescripts throw peds option--
+    if PAD.IS_CONTROL_JUST_RELEASED(0, 323) and not PED.IS_PED_IN_ANY_VEHICLE(players.user_ped(), true) and hulk_values.hands_up_vehicle == false then
+        if hulk_values.hands_up_ped == false then
+            if hulk_values.attached_ped == nil then
+                if PED.IS_PED_ON_FOOT(players.user_ped()) and not PED.IS_PED_RAGDOLL(players.user_ped()) then
+                    local closest_ped = ent_func.getClosestPed(players.get_position(players.user()))
+                    if closest_ped ~= nil then
+                        local dist = ent_func.get_distance_between(closest_ped, players.user_ped())
+                        if dist <= 5 then 
+                            ent_func.has_anim_dict_loaded("missminuteman_1ig_2")
+                            TASK.TASK_PLAY_ANIM(players.user_ped(), "missminuteman_1ig_2", "handsup_enter", 8.0, 0.0, -1, 50, 0, false, false, false)
+                            util.yield(500)
+                            ENTITY.SET_ENTITY_COLLISION(closest_ped, false, true)
+                            local hight = ent_func.get_model_hight(ENTITY.GET_ENTITY_MODEL(closest_ped))
+                            ENTITY.ATTACH_ENTITY_TO_ENTITY(closest_ped, players.user_ped(), 0, 0.0, 0.0, hight, 180, 180, -180, true, false, true, false, 0, true)
+                            hulk_values.attached_ped = closest_ped
+                            hulk_values.hands_up_ped = true
+                        end
+                    end
+                end
+            else
+                TASK.CLEAR_PED_TASKS_IMMEDIATELY(players.user_ped())
+                hulk_values.hands_up_ped = false
+            end
+        else
+            ENTITY.DETACH_ENTITY(hulk_values.attached_ped)
+            PED.SET_PED_TO_RAGDOLL(hulk_values.attached_ped, 2500, 0, 0, false, false, false)
+            local fwd_vect = ENTITY.GET_ENTITY_FORWARD_VECTOR(players.user_ped())
+            fwd_vect:mul(hulk_values.throw_ped_speed)
+            ENTITY.APPLY_FORCE_TO_ENTITY(hulk_values.attached_ped, 3, fwd_vect.x, fwd_vect.y, fwd_vect.z, 0.0, 0.0, 1.0, 0, false, false, true, false, false)
+            ENTITY.SET_ENTITY_NO_COLLISION_ENTITY(hulk_values.attached_ped, players.user_ped(), false)
+            TASK.CLEAR_PED_TASKS_IMMEDIATELY(players.user_ped())
+            ent_func.has_anim_dict_loaded("melee@unarmed@streamed_core")
+            TASK.TASK_PLAY_ANIM(players.user_ped(), "melee@unarmed@streamed_core", "heavy_punch_a", 8.0, 8.0, -1, 0, 0.3, false, false, false)
+            hulk_values.attached_ped = nil
+            hulk_values.hands_up_ped = false
+        end
+    end
+
+end, function()
+    PED.SET_PED_CAN_RAGDOLL(players.user_ped(), true)
+end)
+
+hulk_mode_list:toggle(T("Show Controls"), {}, "", function(on)
+    if on then
+        hulk_values.show_hulk_controls = true
+    end
+    if not on then
+        hulk_values.show_hulk_controls = false
+    end
+end, true)
+
+hulk_mode_list:slider(T("Jump Distance"), {}, "", 20, 300, 100, 5, function(count)
+    hulk_values.jump_distance = count
+end)
+
+hulk_mode_list:slider(T("Jump Height"), {}, "", 10, 150, 60, 5, function(count)
+    hulk_values.jump_height = count
+end)
+
+hulk_mode_list:slider(T("Downward Force"), {}, "", 50, 350, 200, 5, function(count)
+    hulk_values.downward_force = count
+end)
+
+hulk_mode_list:slider(T("Smash Radius"), {}, "", 10, 50, 10, 1, function(count)
+    hulk_values.smash_radius = count
+end)
+
+hulk_mode_list:slider(T("Throw Vehicle Speed"), {}, "", 50, 400, 100, 5, function(count)
+    hulk_values.throw_vehicle_speed = count
+end)
+
+hulk_mode_list:slider(T("Throw Ped Speed"), {}, "", 100, 1000, 500, 5, function(count)
+    hulk_values.throw_ped_speed = count
+end)
+
 --enter nearest vehicle--
 self_main:action(T("Enter Nearest Vehicle"), {}, "", function()
 	if not PED.IS_PED_IN_ANY_VEHICLE(players.user_ped(), false) then
@@ -230,6 +448,33 @@ self_main:action(T("Enter Nearest Vehicle"), {}, "", function()
 			PED.SET_PED_INTO_VEHICLE(players.user_ped(), veh, -1)
 		end
 	end
+end)
+
+function toggleCamDelay(enable)
+    local cam = CAM.GET_RENDERING_CAM()
+
+    -- Set the camera delay to 500ms (0.5 seconds)
+    local delayTime = enable and 500 or 0
+
+    -- Set the camera smoothing style to enable or disable the camera delay effect
+    local smoothingStyle = enable and 24 or 0
+    CAM.SET_CAM_SMOOTHING_STYLE(cam, smoothingStyle)
+
+    -- Optionally, you can also adjust the camera's smoothness settings to further customize the effect
+    if enable then
+        CAM.SET_CAM_SMOOTHING_MAX_SPEED(cam, 1.0)
+        CAM.SET_CAM_SMOOTHING_TIME(cam, 0.5)
+    end
+end
+
+--enter nearest vehicle--
+self_main:toggle("toggle", {}, "", function(on)
+    if on then
+        toggleCamDelay(true)
+    end
+    if not on then
+        toggleCamDelay(false)
+    end
 end)
 
 --go to nearest player--
@@ -287,7 +532,7 @@ end)
 aura_list:toggle_loop(T("Explosive Aura"), {}, "", function()
     local vehicles = entities.get_all_vehicles_as_pointers()
     local user_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
-    for _, vehicle in pairs(vehicles) do
+    for vehicles as vehicle do
         local vehicle_handle = entities.pointer_to_handle(vehicle)
         if vehicle_handle ~= user_vehicle then
             local vehicle_pos = ENTITY.GET_ENTITY_COORDS(vehicle_handle)
@@ -299,7 +544,7 @@ aura_list:toggle_loop(T("Explosive Aura"), {}, "", function()
         end
     end
     local peds = entities.get_all_peds_as_pointers()
-	for _, ped in pairs(peds) do
+    for peds as ped do
         local ped_handle = entities.pointer_to_handle(ped)
         if ped_handle ~= players.user_ped() then
             local ped_pos = ENTITY.GET_ENTITY_COORDS(ped_handle, false)
@@ -317,7 +562,7 @@ end)
 aura_list:toggle_loop(T("Push Aura"), {}, "", function()
     local vehicles = entities.get_all_vehicles_as_pointers()
     local user_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
-    for _, vehicle in pairs(vehicles) do
+    for vehicles as vehicle do
         local vehicle_handle = entities.pointer_to_handle(vehicle)
         if vehicle_handle ~= user_vehicle then
             local vehicle_pos = ENTITY.GET_ENTITY_COORDS(vehicle_handle)
@@ -332,7 +577,7 @@ aura_list:toggle_loop(T("Push Aura"), {}, "", function()
         end
     end
     local peds = entities.get_all_peds_as_pointers()
-	for _, ped in pairs(peds) do
+	for peds as ped do
         local ped_handle = entities.pointer_to_handle(ped)
         if ped_handle ~= players.user_ped() then
             local ped_pos = ENTITY.GET_ENTITY_COORDS(ped_handle, false)
@@ -354,7 +599,7 @@ end)
 aura_list:toggle_loop(T("Pull Aura"), {}, "", function()
     local vehicles = entities.get_all_vehicles_as_pointers()
     local user_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
-    for _, vehicle in pairs(vehicles) do
+    for vehicles as vehicle do
         local vehicle_handle = entities.pointer_to_handle(vehicle)
         if vehicle_handle ~= user_vehicle then
             local vehicle_pos = ENTITY.GET_ENTITY_COORDS(vehicle_handle)
@@ -369,7 +614,7 @@ aura_list:toggle_loop(T("Pull Aura"), {}, "", function()
         end
     end
     local peds = entities.get_all_peds_as_pointers()
-	for _, ped in pairs(peds) do
+	for peds as ped do
         local ped_handle = entities.pointer_to_handle(ped)
         if ped_handle ~= players.user_ped() then
             local ped_pos = ENTITY.GET_ENTITY_COORDS(ped_handle, false)
@@ -390,7 +635,7 @@ end)
 aura_list:toggle_loop(T("Freeze Aura"), {}, "", function()
     local vehicles = entities.get_all_vehicles_as_pointers()
     local user_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
-    for _, vehicle in pairs(vehicles) do
+    for vehicles as vehicle do
         local vehicle_handle = entities.pointer_to_handle(vehicle)
         if vehicle_handle ~= user_vehicle then
             local vehicle_pos = ENTITY.GET_ENTITY_COORDS(vehicle_handle)
@@ -402,7 +647,7 @@ aura_list:toggle_loop(T("Freeze Aura"), {}, "", function()
         end
     end
     local peds = entities.get_all_peds_as_pointers()
-	for _, ped in pairs(peds) do
+	for peds as ped do
         local ped_handle = entities.pointer_to_handle(ped)
         if ped_handle ~= players.user_ped() then
             local ped_pos = ENTITY.GET_ENTITY_COORDS(ped_handle, false)
@@ -422,7 +667,7 @@ end)
 aura_list:toggle_loop(T("Boost Aura"), {}, "", function()
     local vehicles = entities.get_all_vehicles_as_pointers()
     local user_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
-    for _, vehicle in pairs(vehicles) do
+    for vehicles as vehicle do
         local vehicle_handle = entities.pointer_to_handle(vehicle)
         if vehicle_handle ~= user_vehicle then
             local vehicle_pos = ENTITY.GET_ENTITY_COORDS(vehicle_handle)
@@ -438,7 +683,7 @@ aura_list:toggle_loop(T("Boost Aura"), {}, "", function()
         end
     end
     local peds = entities.get_all_peds_as_pointers()
-	for _, ped in pairs(peds) do
+	for peds as ped do
         local ped_handle = entities.pointer_to_handle(ped)
         if ped_handle ~= players.user_ped() then
             local ped_pos = ENTITY.GET_ENTITY_COORDS(ped_handle, false)
@@ -576,7 +821,7 @@ end)
 
 --explode all-
 explode_all_players_list:action(T("Explode all"), {}, "", function()
-  for i, pid in pairs(players.list(false, true, true)) do
+  for i, pid in players.list(false, true, true) do
     local pos = players.get_position(pid)
     pos.z = pos.z - 1.0
     FIRE.ADD_EXPLOSION(pos.x, pos.y, pos.z, explosion_type, 1, true, false, 0.0, false)
@@ -585,7 +830,7 @@ end)
 
 --explode all no damage--
 explode_all_players_list:action(T("Explode All No Damage"), {}, "", function()
-  for i, pid in pairs(players.list(false, true, true)) do
+  for i, pid in players.list(false, true, true) do
     local pos = players.get_position(pid)
     pos.z = pos.z - 1.0
     FIRE.ADD_EXPLOSION(pos.x, pos.y, pos.z, explosion_type, 1, true, false, 0.0, true)
@@ -600,7 +845,7 @@ end)
 
 --explode all loop--
 explode_all_players_list:toggle_loop(T("Explode All Loop"), {}, "", function()
-  for i, pid in pairs(players.list(false, true, true)) do
+  for i, pid in players.list(false, true, true) do
     local pos = players.get_position(pid)
     pos.z = pos.z - 1.0
     FIRE.ADD_EXPLOSION(pos.x, pos.y, pos.z, explosion_type, 1, true, false, 0.0, false)
@@ -610,7 +855,7 @@ end)
 
 --explode all loop no damage--
 explode_all_players_list:toggle_loop(T("Explode All No Damage Loop"), {}, "", function()
-  for i, pid in pairs(players.list(false, true, true)) do
+  for i, pid in players.list(false, true, true) do
     local pos = players.get_position(pid)
     pos.z = pos.z - 1.0
     FIRE.ADD_EXPLOSION(pos.x, pos.y, pos.z, explosion_type, 1, true, false, 0.0, true)
@@ -836,7 +1081,7 @@ end)
 local door_control = vehicle_main:list(T("Door Control"))
 
 --open all doors--
-doors_open_opt = door_control:action(T("Open All Vehicle Doors"), {}, "", function()
+door_control:action(T("Open All Vehicle Doors"), {}, "", function()
     if PED.IS_PED_IN_ANY_VEHICLE(players.user_ped(), false) then
         local vehicle = entities.get_user_vehicle_as_handle(players.user())
         local doors = VEHICLE.GET_NUMBER_OF_VEHICLE_DOORS(vehicle)
@@ -845,12 +1090,11 @@ doors_open_opt = door_control:action(T("Open All Vehicle Doors"), {}, "", functi
         end
     else
         notify(T("Your not in any vehicle."), notif_off)
-        menu.set_value(doors_open_opt, false)
     end
 end)
 
 --close all doors--
-doors_close_opt = door_control:action(T("Close All Vehicle Doors"), {}, "", function()
+door_control:action(T("Close All Vehicle Doors"), {}, "", function()
     if PED.IS_PED_IN_ANY_VEHICLE(players.user_ped(), false) then
         local vehicle = entities.get_user_vehicle_as_handle(players.user())
         local doors = VEHICLE.GET_NUMBER_OF_VEHICLE_DOORS(vehicle)
@@ -858,13 +1102,12 @@ doors_close_opt = door_control:action(T("Close All Vehicle Doors"), {}, "", func
             VEHICLE.SET_VEHICLE_DOOR_SHUT(vehicle, i, true)
         end
     else
-        notify(T("door_control"), notif_off)
-        menu.set_value(doors_close_opt, false)
+        notify(T("Your not in any vehicle."), notif_off)
     end
 end)
 
 --break all doors--
-doors_break_opt = door_control:action(T("Break All Vehicle Doors"), {}, "", function()
+door_control:action(T("Break All Vehicle Doors"), {}, "", function()
     if PED.IS_PED_IN_ANY_VEHICLE(players.user_ped(), false) then
         local vehicle = entities.get_user_vehicle_as_handle(players.user())
         local doors = VEHICLE.GET_NUMBER_OF_VEHICLE_DOORS(vehicle)
@@ -873,7 +1116,6 @@ doors_break_opt = door_control:action(T("Break All Vehicle Doors"), {}, "", func
         end
     else
         notify(T("Your not in any vehicle."), notif_off)
-        menu.set_value(doors_break_opt, false)
     end
 end)
 ---------------
@@ -1077,13 +1319,65 @@ weapons_main:toggle_loop(T("Nuke Gun"), {}, "", function()
 		ENTITY.APPLY_FORCE_TO_ENTITY(nuke, 0, dir.x, dir.y, dir.z, 0.0, 0.0, 0.0, 0, true, false, true, false, true)
 		ENTITY.SET_ENTITY_HAS_GRAVITY(nuke, true)
 
-		while not ENTITY.HAS_ENTITY_COLLIDED_WITH_ANYTHING(nuke) and not ENTITY.IS_ENTITY_IN_WATER(nuke) do
+		while not ENTITY.HAS_ENTITY_COLLIDED_WITH_ANYTHING(nuke) do
 			util.yield(0)
 		end
 		local nukePos = ENTITY.GET_ENTITY_COORDS(nuke, true)
 		entities.delete_by_handle(nuke)
         ent_func.create_nuke_explosion(nukePos)
 	end
+end)
+
+weapons_main:toggle_loop(T("Firework Gun"), {}, T("When holding an firework launcher u will shoot a custom firework that spits vehicles out as explosion."), function()
+    if WEAPON.GET_SELECTED_PED_WEAPON(players.user_ped()) == 2138347493 and not ENTITY.DOES_ENTITY_EXIST(firework) then --when holding a firework launcher--
+        PLAYER.DISABLE_PLAYER_FIRING(players.user_ped(), true)
+        if PAD.IS_DISABLED_CONTROL_PRESSED(0, 24) then
+            local hash = util.joaat("w_lr_firework_rocket")
+            ent_func.request_model(hash)
+            local player_pos = ENTITY.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(players.user_ped(), 0.0, 0.5, 0.5)
+            local dir = {}
+            local c2 = {}
+            c2 = ent_func.get_offset_from_gameplay_camera(15)
+            dir.x = (c2.x - player_pos.x) * 15
+            dir.y = (c2.y - player_pos.y) * 15
+            dir.z = (c2.z - player_pos.z) * 15
+
+            firework = OBJECT.CREATE_OBJECT_NO_OFFSET(hash, player_pos.x, player_pos.y, player_pos.z, true, false, false)
+            local cam_rot = CAM.GET_GAMEPLAY_CAM_ROT(0)
+            ENTITY.APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS(firework, 1, dir.x, dir.y, dir.z, false, false, false, false)
+            ENTITY.SET_ENTITY_ROTATION(firework, cam_rot.x, cam_rot.y, cam_rot.z, 0, true)
+            ENTITY.SET_ENTITY_HAS_GRAVITY(firework, false)
+
+            ent_func.use_fx_asset("scr_rcpaparazzo1")
+            local effect = GRAPHICS.START_PARTICLE_FX_LOOPED_ON_ENTITY("scr_mich4_firework_trail_spawn", firework, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, false, false, false)
+
+            local timer = 150
+            while not ENTITY.HAS_ENTITY_COLLIDED_WITH_ANYTHING(firework) and timer > 0 do
+                --im doing this bc im waiting till it has collided or when the timer is less then 1 so this is not set anymore so it doesnt work--
+                if WEAPON.GET_SELECTED_PED_WEAPON(players.user_ped()) == 2138347493 then
+                    PLAYER.DISABLE_PLAYER_FIRING(players.user_ped(), true)
+                end
+                timer = timer - 1
+                util.yield(0)
+            end
+
+            if timer <= 0 or ENTITY.HAS_ENTITY_COLLIDED_WITH_ANYTHING(firework) then
+                GRAPHICS.STOP_PARTICLE_FX_LOOPED(effect, false)
+                local fireworkPos = ENTITY.GET_ENTITY_COORDS(firework, true)
+                entities.delete_by_handle(firework)
+                for i = 1, 10 do
+                    local model = util.joaat("adder")
+                    ent_func.request_model(model)
+                    local vehicle = entities.create_vehicle(model, fireworkPos, 0)
+                    ENTITY.SET_ENTITY_COLLISION(vehicle, false, true)
+                    ENTITY.SET_ENTITY_ROTATION(vehicle, math.random(-180.0, 180.0), math.random(-180.0, 180.0), math.random(-180.0, 180.0), 0, true)
+                    VEHICLE.SET_VEHICLE_FORWARD_SPEED(vehicle, 25)
+                    util.yield(250)
+                    ENTITY.SET_ENTITY_COLLISION(vehicle, true, true)
+                end
+            end
+        end
+    end
 end)
 
 --[[ i dont have any effects that are cool to use this with if i get any i will add this
@@ -1108,7 +1402,7 @@ local all_vehicles = world_main:list(T("All Vehicles"))
 all_vehicles:toggle_loop(T("Explode All Vehicles"), {}, "", function()
     local vehicles = entities.get_all_vehicles_as_handles()
     local user_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
-    for _, vehicle in pairs(vehicles) do
+    for vehicles as vehicle do
         if vehicle ~= user_vehicle then
             local vehicle_pos = ENTITY.GET_ENTITY_COORDS(vehicle, true)
             FIRE.ADD_EXPLOSION(vehicle_pos.x, vehicle_pos.y, vehicle_pos.z, 1, 1.0, true, false, 0.0, false)
@@ -1120,14 +1414,14 @@ end)
 all_vehicles:toggle_loop(T("Freeze All Vehicles"), {}, "", function()
     local vehicles = entities.get_all_vehicles_as_handles()
     local user_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
-    for _, vehicle in pairs(vehicles) do
+    for vehicles as vehicle do
         if vehicle ~= user_vehicle then
             ENTITY.FREEZE_ENTITY_POSITION(vehicle, true)
         end
     end
 end, function()
     local vehicles = entities.get_all_vehicles_as_handles()
-    for _, vehicle in pairs(vehicles) do
+    for vehicles as vehicle do
         ENTITY.FREEZE_ENTITY_POSITION(vehicle, false)
     end
 end)
@@ -1136,14 +1430,14 @@ end)
 all_vehicles:toggle_loop(T("Turn Off Gravity For All Vehicles"), {}, "", function()
     local vehicles = entities.get_all_vehicles_as_handles()
     local user_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
-    for _, vehicle in pairs(vehicles) do
+    for vehicles as vehicle do
         if vehicle ~= user_vehicle then
             VEHICLE.SET_VEHICLE_GRAVITY(vehicle, false)
         end
     end
 end, function()
     local vehicles = entities.get_all_vehicles_as_handles()
-    for _, vehicle in pairs(vehicles) do
+    for vehicles as vehicle do
         VEHICLE.SET_VEHICLE_GRAVITY(vehicle, true)
     end
 end)
@@ -1152,7 +1446,7 @@ end)
 all_vehicles:toggle_loop(T("Jumping Vehicles"), {}, "", function()
     local vehicles = entities.get_all_vehicles_as_handles()
     local user_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
-    for _, vehicle in pairs(vehicles) do
+    for vehicles as vehicle do
         if vehicle ~= user_vehicle then
             ENTITY.APPLY_FORCE_TO_ENTITY(vehicle, 3, 0, 0, 10, 0.0, 0.0, 0.0, 0, true, false, true, false, true)
         end
@@ -1164,7 +1458,7 @@ end)
 all_vehicles:toggle_loop(T("Vehicle Chaos"), {}, "", function()
     local vehicles = entities.get_all_vehicles_as_handles()
     local user_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
-    for _, vehicle in pairs(vehicles) do
+    for vehicles as vehicle do
         if vehicle ~= user_vehicle then
             ENTITY.APPLY_FORCE_TO_ENTITY(vehicle, 3, math.random(20, 100), math.random(20, 100), math.random(20, 100), 0.0, 0.0, 0.0, 0, true, false, true, false, true)
         end
@@ -1176,7 +1470,7 @@ end)
 all_vehicles:toggle_loop(T("Turn all Vehicles on Their back"), {}, "", function()
     local vehicles = entities.get_all_vehicles_as_handles()
     local user_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
-    for _, vehicle in pairs(vehicles) do
+    for vehicles as vehicle do
         if vehicle ~= user_vehicle then
             ENTITY.SET_ENTITY_ROTATION(vehicle, 0, 180, 0, 1, true)
         end
@@ -1184,7 +1478,7 @@ all_vehicles:toggle_loop(T("Turn all Vehicles on Their back"), {}, "", function(
 end, function()
     local vehicles = entities.get_all_vehicles_as_handles()
     local user_vehicle = PED.GET_VEHICLE_PED_IS_IN(players.user_ped(), true)
-    for _, vehicle in pairs(vehicles) do
+    for vehicles as vehicle do
         if vehicle ~= user_vehicle then
             ENTITY.SET_ENTITY_ROTATION(vehicle, 0, 0, 0, 1, true)
         end
@@ -1290,6 +1584,40 @@ local player_vehicle = menu.player_root(pid):list(T("Vehicle"))
 -----------------
 --Trolling list--
 -----------------
+local aim_reactions_list = player_trolling:list(T("Aim Reactions"))
+
+--credits to lance for getting if someone is aiming at u--
+aim_reactions_list:toggle_loop(T("Ram Player"), {}, "", function()
+    local c1 = players.get_position(pid)
+    local c2 =  players.get_position(players.user())
+    local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+    if PED.IS_PED_FACING_PED(ped, players.user_ped(), 2) and ENTITY.HAS_ENTITY_CLEAR_LOS_TO_ENTITY(ped, players.user_ped(), 17) and MISC.GET_DISTANCE_BETWEEN_COORDS(c1.x, c1.y, c1.z, c2.x, c2.y, c2.z) < 1000  and WEAPON.GET_SELECTED_PED_WEAPON(ped) ~= -1569615261  and PED.GET_PED_CONFIG_FLAG(ped, 78, true) then 
+        notify(players.get_name(pid) .. " Is aiming at you.", notif_off)
+        local player_pos = players.get_position(pid)
+        local closest_vehicle = ent_func.getClosestVehicle(player_pos)
+        local vehicle_pos = ENTITY.GET_ENTITY_COORDS(closest_vehicle)
+        local pos2 = players.get_position(pid)
+        local rel = v3.new(pos2)
+        rel:sub(vehicle_pos)
+        local rot = rel:toRot()
+        if ent_func.get_entity_control_onces(closest_vehicle) then
+            ENTITY.SET_ENTITY_ROTATION(closest_vehicle, rot.x, rot.y, rot.z, 2, false)
+            VEHICLE.SET_VEHICLE_FORWARD_SPEED(closest_vehicle, 100)
+        end
+    end
+end)
+
+aim_reactions_list:toggle_loop(T("Explode"), {}, "", function()
+    local c1 = players.get_position(pid)
+    local c2 =  players.get_position(players.user())
+    local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+    if PED.IS_PED_FACING_PED(ped, players.user_ped(), 2) and ENTITY.HAS_ENTITY_CLEAR_LOS_TO_ENTITY(ped, players.user_ped(), 17) and MISC.GET_DISTANCE_BETWEEN_COORDS(c1.x, c1.y, c1.z, c2.x, c2.y, c2.z) < 1000  and WEAPON.GET_SELECTED_PED_WEAPON(ped) ~= -1569615261  and PED.GET_PED_CONFIG_FLAG(ped, 78, true) then 
+        notify(players.get_name(pid) .. " Is aiming at you.", notif_off)
+        local player_pos = players.get_position(pid)
+        FIRE.ADD_EXPLOSION(player_pos.x, player_pos.y, player_pos.z, 1, 1, false, true, 0.0, false)
+    end
+end)
+
 --teleport list--
 local tp_player_list = player_trolling:list(T("Tp Player"))
 
@@ -1302,7 +1630,8 @@ local teleports = {
   lsia = {name=T("Teleport To LSIA"),pos=v3.new(-1335.6514,-3044.2737,13.944447)},
   space = {name=T("Teleport To Space"),pos=v3.new(-191.53212,-897.53015,2600.00000)},
 }
-for _,data in pairs(teleports) do
+
+for teleports as data do
     tp_player_list:action(data.name, {}, "", function()
         local vehicle = control_vehicle(pid, false, function(vehicle)
             ENTITY.SET_ENTITY_COORDS_NO_OFFSET(vehicle, data.pos.x, data.pos.y, data.pos.z, false, false, false)
@@ -1343,6 +1672,53 @@ for _,data in pairs(teleports) do
     end)
 end
 
+player_trolling:toggle(T("Aggressive Police Vehicle"), {}, "", function(on)
+    if on then
+        local target_ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
+        local player_pos = players.get_position(pid)
+        local police_ped_hash = util.joaat("s_m_y_cop_01")
+        local police_car_hash = util.joaat("police3")
+    
+        ent_func.request_model(police_ped_hash)
+        ent_func.request_model(police_car_hash)
+        
+        police_car = entities.create_vehicle(police_car_hash, v3.new(player_pos.x+math.random(-10, 10), player_pos.y+math.random(-10, 10), player_pos.z), 0)
+        local police_car_coords = ENTITY.GET_ENTITY_COORDS(police_car, true)
+        local rel = v3.new(player_pos)
+        rel:sub(police_car_coords)
+        local rot = rel:toRot()
+        ENTITY.SET_ENTITY_ROTATION(police_car, rot.x, rot.y, rot.z, 2, false)
+        police_ped = entities.create_ped(1, police_ped_hash, police_car_coords, 0)
+        PED.SET_PED_INTO_VEHICLE(police_ped, police_car, -1)
+    
+        VEHICLE.SET_VEHICLE_SIREN(police_car, true)
+        VEHICLE.SET_VEHICLE_DOORS_LOCKED_FOR_ALL_PLAYERS(police_car, true)
+        VEHICLE.MODIFY_VEHICLE_TOP_SPEED(police_car, 20000)
+        ENTITY.SET_ENTITY_LOAD_COLLISION_FLAG(police_car, true, true)
+        ENTITY.SET_ENTITY_AS_MISSION_ENTITY(police_car, true, true)
+        ENTITY.SET_ENTITY_LOAD_COLLISION_FLAG(police_ped, true, true)
+        ENTITY.SET_ENTITY_AS_MISSION_ENTITY(police_ped, true, true)
+        TASK.TASK_VEHICLE_MISSION_PED_TARGET(police_ped, police_car, target_ped, 6, 100.0, 0, 0.0, 0.0, true)
+
+        while on do
+            if ent_func.get_distance_between(police_car, player_pos) >= 50 then
+                player_pos = players.get_position(pid)
+                ENTITY.SET_ENTITY_COORDS(police_car, player_pos.x+math.random(-10, 10), player_pos.y+math.random(-10, 10), player_pos.z, false, false, false, false)
+                police_car_coords = ENTITY.GET_ENTITY_COORDS(police_car, true)
+                local rel = v3.new(player_pos)
+                rel:sub(police_car_coords)
+                local rot = rel:toRot()
+                ENTITY.SET_ENTITY_ROTATION(police_car, rot.x, rot.y, rot.z, 2, false)
+            end
+            util.yield(500)
+        end
+    end
+    if not on then
+        entities.delete_by_handle(police_car)
+        entities.delete_by_handle(police_ped)
+    end
+end)
+
 --auras--
 local player_aura_list = player_trolling:list(T("Aura's"))
 
@@ -1357,7 +1733,7 @@ player_aura_list:toggle_loop(T("Explosive Aura"), {}, "", function()
     local vehicles = entities.get_all_vehicles_as_pointers()
     local player_ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
     local player_vehicle = ent_func.get_vehicle_from_ped(player_ped)
-    for _, vehicle in pairs(vehicles) do
+    for vehicles as vehicle do
         local vehicle_handle = entities.pointer_to_handle(vehicle)
         if vehicle_handle ~= player_vehicle then
             local vehicle_pos = ENTITY.GET_ENTITY_COORDS(vehicle_handle)
@@ -1369,7 +1745,7 @@ player_aura_list:toggle_loop(T("Explosive Aura"), {}, "", function()
         end
     end
     local peds = entities.get_all_peds_as_pointers()
-	for _, ped in pairs(peds) do
+	for peds as ped do
         local ped_handle = entities.pointer_to_handle(ped)
         if ped_handle ~= player_ped then
             local ped_pos = ENTITY.GET_ENTITY_COORDS(ped_handle, false)
@@ -1388,7 +1764,7 @@ player_aura_list:toggle_loop(T("Push Aura"), {}, "", function()
     local vehicles = entities.get_all_vehicles_as_pointers()
     local player_ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
     local player_vehicle = ent_func.get_vehicle_from_ped(player_ped)
-    for _, vehicle in pairs(vehicles) do
+    for vehicles as vehicle do
         local vehicle_handle = entities.pointer_to_handle(vehicle)
         if vehicle_handle ~= player_vehicle then
             local vehicle_pos = ENTITY.GET_ENTITY_COORDS(vehicle_handle)
@@ -1405,7 +1781,7 @@ player_aura_list:toggle_loop(T("Push Aura"), {}, "", function()
         end
     end
     local peds = entities.get_all_peds_as_pointers()
-	for _, ped in pairs(peds) do
+	for peds as ped do
         local ped_handle = entities.pointer_to_handle(ped)
         if ped_handle ~= player_ped then
             local ped_pos = ENTITY.GET_ENTITY_COORDS(ped_handle, false)
@@ -1430,7 +1806,7 @@ player_aura_list:toggle_loop(T("Pull Aura"), {}, "", function()
     local vehicles = entities.get_all_vehicles_as_pointers()
     local player_ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
     local player_vehicle = ent_func.get_vehicle_from_ped(player_ped)
-    for _, vehicle in pairs(vehicles) do
+    for vehicles as vehicle do
         local vehicle_handle = entities.pointer_to_handle(vehicle)
         if vehicle_handle ~= player_vehicle then
             local vehicle_pos = ENTITY.GET_ENTITY_COORDS(vehicle_handle)
@@ -1447,7 +1823,7 @@ player_aura_list:toggle_loop(T("Pull Aura"), {}, "", function()
         end
     end
     local peds = entities.get_all_peds_as_pointers()
-	for _, ped in pairs(peds) do
+	for peds as ped do
         local ped_handle = entities.pointer_to_handle(ped)
         if ped_handle ~= player_ped then
             local ped_pos = ENTITY.GET_ENTITY_COORDS(ped_handle, false)
@@ -1471,7 +1847,7 @@ player_aura_list:toggle_loop(T("Freeze Aura"), {}, "", function()
     local vehicles = entities.get_all_vehicles_as_pointers()
     local player_ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
     local player_vehicle = ent_func.get_vehicle_from_ped(player_ped)
-    for _, vehicle in pairs(vehicles) do
+    for vehicles as vehicle do
         local vehicle_handle = entities.pointer_to_handle(vehicle)
         if vehicle_handle ~= player_vehicle then
             local vehicle_pos = ENTITY.GET_ENTITY_COORDS(vehicle_handle)
@@ -1485,7 +1861,7 @@ player_aura_list:toggle_loop(T("Freeze Aura"), {}, "", function()
         end
     end
     local peds = entities.get_all_peds_as_pointers()
-	for _, ped in pairs(peds) do
+	for peds as ped do
         local ped_handle = entities.pointer_to_handle(ped)
         if ped_handle ~= player_ped then
             local ped_pos = ENTITY.GET_ENTITY_COORDS(ped_handle, false)
@@ -1508,7 +1884,7 @@ player_aura_list:toggle_loop(T("Boost Aura"), {}, "", function()
     local vehicles = entities.get_all_vehicles_as_pointers()
     local player_ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
     local player_vehicle = ent_func.get_vehicle_from_ped(player_ped)
-    for _, vehicle in pairs(vehicles) do
+    for vehicles as vehicle do
         local vehicle_handle = entities.pointer_to_handle(vehicle)
         if vehicle_handle ~= player_vehicle then
             local vehicle_pos = ENTITY.GET_ENTITY_COORDS(vehicle_handle)
@@ -1526,7 +1902,7 @@ player_aura_list:toggle_loop(T("Boost Aura"), {}, "", function()
         end
     end
     local peds = entities.get_all_peds_as_pointers()
-	for _, ped in pairs(peds) do
+	for peds as ped do
         local ped_handle = entities.pointer_to_handle(ped)
         if ped_handle ~= player_ped then
             local ped_pos = ENTITY.GET_ENTITY_COORDS(ped_handle, false)
@@ -1604,7 +1980,8 @@ local PTFX_lags = {
     tanker = {name=T("Tanker"),asset="des_tanker_crash",particle="ent_ray_tanker_exp_sp"},
     fire_work_fountain = {name=T("Fire Work Fountain"),asset="scr_indep_fireworks",particle="scr_indep_firework_fountain"},
 }
-for _,data in pairs(PTFX_lags) do
+
+for PTFX_lags as data do
     ptfx_lags_list:toggle_loop(data.name, {}, "", function()
         ent_func.use_fx_asset(data.asset)
         local ped = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(pid)
@@ -1645,6 +2022,42 @@ player_weapon_list:toggle_loop(T("Remove Weapon When Shooting"), {""}, "", funct
     if PED.IS_PED_SHOOTING(targetPed) then
         local weaponhash = WEAPON.GET_SELECTED_PED_WEAPON(targetPed)
         WEAPON.REMOVE_WEAPON_FROM_PED(targetPed, weaponhash)
+    end
+end)
+
+safeguards_transporter = player_weapon_list:toggle(T("Safeguards Transporter"), {""}, T("Will spawn a truck with a nuke in it that will explode when the truck explodes so any player can set the nuke off."), function(on)
+    if on then
+        if not ENTITY.DOES_ENTITY_EXIST(nuke) then
+            local pos = players.get_position(pid)
+            local hash = util.joaat("tiptruck")
+            ent_func.request_model(hash)
+            truck = VEHICLE.CREATE_VEHICLE(hash, pos.x , pos.y + 5, pos.z, 0, true, false, true)
+            local hash = util.joaat("prop_military_pickup_01")
+            ent_func.request_model(hash)
+            local truck_pos = ENTITY.GET_ENTITY_COORDS(truck, true)
+            local truck_rot = ENTITY.GET_ENTITY_ROTATION(truck, 0)
+            nuke = OBJECT.CREATE_OBJECT_NO_OFFSET(hash, truck_pos.x, truck_pos.y-1.5, truck_pos.z + 2, true, false, true)
+            ENTITY.SET_ENTITY_HAS_GRAVITY(nuke, true)
+            ENTITY.SET_ENTITY_ROTATION(nuke, truck_rot.x, truck_rot.y, truck_rot.z+90, 0, true)
+            ENTITY.ATTACH_ENTITY_TO_ENTITY(nuke, truck, 0, 0.0, -1.5, 1.7, 0.0, 0.0, 90.0, false, false, false, false, 2, true)
+        end
+
+        util.create_tick_handler(function()
+            if VEHICLE.GET_VEHICLE_ENGINE_HEALTH(truck) <= 0 and ENTITY.DOES_ENTITY_EXIST(nuke) then
+                local nukePos = ENTITY.GET_ENTITY_COORDS(nuke, true)
+                entities.delete_by_handle(nuke)
+                ent_func.create_nuke_explosion(nukePos)
+                menu.set_value(safeguards_transporter, false)
+            end
+        end)
+    end
+    if not on then
+        if ENTITY.DOES_ENTITY_EXIST(nuke) then
+            entities.delete_by_handle(nuke)
+        end
+        if ENTITY.DOES_ENTITY_EXIST(truck) then
+            entities.delete_by_handle(truck)
+        end
     end
 end)
 

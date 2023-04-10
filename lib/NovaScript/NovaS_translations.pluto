@@ -253,8 +253,28 @@ trans.translations = {
         ["Kind"] = "Soort",
         ["Rotation Speed"] = "Rotatiesnelheid",
         ["Set Vehicle To Cam Rotation While Airborne"] = "Stel Voertuig Naar CameraRotatie In Terwijl U In De Lucht Bent",
+        ["Jump"] = "Spring",
+        ["Smash"] = "Slaan",
+        ["Throw Vehicle"] = "Voertuig Gooien",
+        ["Throw Ped"] = "Gooi Ped",
+        ["Hulk Mode"] = "Hulk Modus",
+        ["Lets you use abilities that the hulk has super jump, smash (will only work when your in the air), explosive punch and throw vehicles/peds.\nThis will also enable godmode."] = "Hiermee kun je vaardigheden gebruiken die de hulk heeft: superspringen, smashen (werkt alleen als je in de lucht bent), explosieve stoten en voertuigen/peds gooien.\nHierdoor wordt ook godmode ingeschakeld.",
+        ["Show Controls"] = "Bediening Tonen",
+        ["Jump Distance"] = "Sprong Afstand",
+        ["Jump Height"] = "Spronghoogte",
+        ["Downward Force"] = "Neerwaartse Kracht",
+        ["Smash Radius"] = "Slaan Straal",
+        ["Throw Vehicle Speed"] = "Gooi Voertuigsnelheid",
+        ["Throw Ped Speed"] = "Gooi Ped Snelheid",
+        ["Firework Gun"] = "Vuurwerk Pistool",
+        ["When holding an firework launcher u will shoot a custom firework that spits vehicles out as explosion."] = "Als je een vuurwerkwerper vasthoudt, schiet je een aangepast vuurwerk dat voertuigen als explosie uitspuugt.",
+        ["Aim Reactions"] = "Richt reacties",
+        ["Ram Player"] = "Ram Speler",
+        ["Aggressive Police Vehicle"] = "Agressief Politievoertuig",
+        ["Safeguards Transporter"] = "Beveiligde Transporter",
+        ["Will spawn a truck with a nuke in it that will explode when the truck explodes so any player can set the nuke off."] = "Zal een vrachtwagen spawnen met een atoombom erin die zal ontploffen wanneer de vrachtwagen ontploft, zodat elke speler de atoombom kan laten ontploffen.",
     },
-    --not complete--
+    --complete--
     --german by ! N0mbyy, thanks for translating
     de = {
         ["Self"] = "Selbst",
@@ -504,6 +524,8 @@ trans.translations = {
         ["Freeze Vehicle"] = "Fahrzeug Enfrieren",
         ["Turn Off Gravity"] ="Gravitation Deaktivieren",
         ["Kind"] = "Typ",
+        ["Rotation Speed"] = "ROtations Geschwindigkeit",
+        ["Set Vehicle To Cam Rotation While Airborne"] = "Ändere die Fahrzeug Kamera Rotaion in der Luft",
     },
     --complete--
     --spanish by Rodri, thanks for translating
@@ -757,6 +779,25 @@ trans.translations = {
         ["Kind"] = "Tipo",
         ["Rotation Speed"] = "Velocidad de rotación",
         ["Set Vehicle To Cam Rotation While Airborne"] = "Establezca la rotación del vehículo en la leva mientras está en el aire",
+        ["Jump"] = "Saltar",
+        ["Smash"] = "Aplastar",
+        ["Throw Vehicle"] = "Lanzar vehículo",
+        ["Throw Ped"] = "Lanzar Ped",
+        ["Hulk Mode"] = "Modo Hulk",
+        ["Lets you use abilities that the hulk has super jump, smash (will only work when your in the air), explosive punch and throw vehicles/peds.\nThis will also enable godmode."] = "Te permite usar las habilidades que tiene Hulk: supersalto, aplastamiento (solo funcionará cuando estés en el aire), puñetazo explosivo y lanzamiento de vehículos/Peds.\nEsto también habilitará el modo dios.",
+        ["Show Controls"] = "Mostrar controles",
+        ["Jump Distance"] = "Distancia de salto",
+        ["Jump Height"] = "Altura de salto",
+        ["Downward Force"] = "Fuerza hacia abajo",
+        ["Smash Radius"] = "Radio de Aplastamiento",
+        ["Throw Vehicle Speed"] = "Velocidad de Lanzar vehículo.",
+        ["Throw Ped Speed"] = "Velocidad de Lanzar Ped.",
+        ["Firework Gun"] = "Pistola de fuegos artificiales",
+        ["When holding an firework launcher u will shoot a custom firework that spits vehicles out as explosion."] = "Cuando sostenga un lanzador de fuegos artificiales, disparará un fuego artificial personalizado que escupe vehículos como una explosión.",
+        ["Ram Player"] = "Jugador de carnero",
+        ["Aggressive Police Vehicle"] = "Vehículo policial agresivo",
+        ["Safeguards Transporter"] = "Transporte de Salvaguardias",
+        ["Will spawn a truck with a nuke in it that will explode when the truck explodes so any player can set the nuke off."] = "Generará un camión con una bomba nuclear que explotará cuando el camión explote para que cualquier jugador pueda activar la bomba nuclear.",
     },
     --complete--
     --french by XenonMido, thanks for translating--
@@ -1011,7 +1052,7 @@ trans.translations = {
         ["Rotation Speed"] = "Vitesse de rotation",
         ["Set Vehicle To Cam Rotation While Airborne"] = "Definir la rotation du véhicule sur la camera en vol",
     },
-    --not complete--
+    --complete--
     --chinese by lu_zi, thanks for translating--
     zh = {
         ["Self"] = "自我",
@@ -1261,6 +1302,8 @@ trans.translations = {
         ["Freeze Vehicle"] = "冻结载具",
         ["Turn Off Gravity"] = "关闭重力",
         ["Kind"] = "类型",
+        ["Rotation Speed"] = "旋转速度",
+        ["Set Vehicle To Cam Rotation While Airborne"] = "设置载具在空中时镜头旋转",
                  
     },
     --complete--
@@ -1515,7 +1558,26 @@ trans.translations = {
         ["Kind"] = "유형",
         ["Rotation Speed"] = "회전 속도",
         ["Set Vehicle To Cam Rotation While Airborne"] = "항공 중에 차량을 캠 회전으로 설정",
-         
+        ["Jump"] = "점프",
+        ["Smash"] = "스매쉬",
+        ["Throw Vehicle"] = "차량 던지기" ,
+        ["Throw Ped"] = "ped 던지기",
+        ["Hulk Mode"] = "헐크 모드",
+        ["Lets you use abilities that the hulk has super jump, smash (will only work when your in the air), explosive punch and throw vehicles/peds.\nThis will also enable godmode."] = "헐크에 슈퍼 점프, 스매시(공중에서만 작동), 폭발적인 펀치 및 차량/페드 투척 기능을 사용할 수 있습니다.\n이것은 또한 god 모드를 활성화할 수 있습니다.",
+        ["Show Controls"] = "컨트롤 표시",
+        ["Jump Distance"] =  "점프 거리",
+        ["Jump Height"] =  "점프 높이",
+        ["Downward Force"] = "하향 세력",
+        ["Smash Radius"] = "스매쉬 반지름", 
+        ["Throw Vehicle Speed"] = "차량 속도 던지기",
+        ["Throw Ped Speed"] = "ped 속도 던지기",
+        ["Firework Gun"] = "불꽃총",
+        ["When holding an firework launcher u will shoot a custom firework that spits vehicles out as explosion."] = "불꽃놀이 발사기를 들고 있을 때는 차량을 폭발로 분출하는 맞춤형 불꽃놀이를 쏠 것입니다.",
+        ["Aim Reactions"] = "목표 반응",
+        ["Ram Player"] = "램 플레이어",
+        ["Aggressive Police Vehicle"] = "공격적인 경찰차",
+        ["Safeguards Transporter"] = "세이프가드 트랜스포터",
+        ["Will spawn a truck with a nuke in it that will explode when the truck explodes so any player can set the nuke off."] = "트럭이 폭발할 때 폭발할 핵이 있는 트럭을 만들어 플레이어가 핵을 터뜨릴 수 있도록 합니다."
     },
     --completed--
     --portuguese by Erstarisk, thanks for translating--
@@ -1769,6 +1831,26 @@ trans.translations = {
         ["Kind"] = "Tipo",
         ["Rotation Speed"] = "Velocidade da Rotação",
         ["Set Vehicle To Cam Rotation While Airborne"] = "Alinhar Direção do Carro Com a Câmera Quando Estiver Voando",
+        ["Jump"] = "Pular",
+        ["Smash"] = "Esmagar",
+        ["Throw Vehicle"] = "Jogar Veículo",
+        ["Throw Ped"] = "Jogar Pedestre",
+        ["Hulk Mode"] = "Modo Hulk",
+        ["Lets you use abilities that the hulk has super jump, smash (will only work when your in the air), explosive punch and throw vehicles/peds.\nThis will also enable godmode."] = "Lhe permite usar habilidades parecidas com o Hulk como super pulo, esmagar (só funciona quando você estiver no ar), soco explosivo e arremessar veículos/pedestres.\nIsso também vai habilitar o modo deus",
+        ["Show Controls"] = "Mostrar Controles",
+        ["Jump Distance"] = "Distância do Pulo",
+        ["Jump Height"] = "Altura do Pulo",
+        ["Downward Force"] = "Força da Queda",
+        ["Smash Radius"] = "Raio do Esmagamento",
+        ["Throw Vehicle Speed"] = "Velocidade do Veículo Arremessado",
+        ["Throw Ped Speed"] = "Velocidade do Pedestre Arremessado",
+        ["Firework Gun"] = "Artifício de Veículos",
+        ["When holding an firework launcher u will shoot a custom firework that spits vehicles out as explosion."] = "Quando atirar com o lançador de fogos de artifício, ele atirará um míssel especial que ira jogar veículos para vários lados quando explodir",
+        ["Aim Reactions"] = "Reações Quando Mirado",
+        ["Ram Player"] = "Atropelar Jogador",
+        ["Aggressive Police Vehicle"] = "Veículo de Polícia Agressivo",
+        ["Safeguards Transporter"] = "Caminhão Atômico",
+        ["Will spawn a truck with a nuke in it that will explode when the truck explodes so any player can set the nuke off."] = "Irá criar um caminhão com uma bomba nuclear que vai explodir junto com o caminhão, assim qualquer jogador pode explodir a bomba",
     },
     --complete--
     --polish by -Negotium-, thanks for translating--
@@ -2279,4 +2361,24 @@ return trans
         ["Kind"] =
         ["Rotation Speed"] =
         ["Set Vehicle To Cam Rotation While Airborne"] =
+        ["Jump"] =
+        ["Smash"] =
+        ["Throw Vehicle"] =
+        ["Throw Ped"] =
+        ["Hulk Mode"] =
+        ["Lets you use abilities that the hulk has super jump, smash (will only work when your in the air), explosive punch and throw vehicles/peds.\nThis will also enable godmode."] =
+        ["Show Controls"] =
+        ["Jump Distance"] =
+        ["Jump Height"] =
+        ["Downward Force"] =
+        ["Smash Radius"] =
+        ["Throw Vehicle Speed"] =
+        ["Throw Ped Speed"] =
+        ["Firework Gun"] =
+        ["When holding an firework launcher u will shoot a custom firework that spits vehicles out as explosion."] =
+        ["Aim Reactions"] =
+        ["Ram Player"] =
+        ["Aggressive Police Vehicle"] =
+        ["Safeguards Transporter"] =
+        ["Will spawn a truck with a nuke in it that will explode when the truck explodes so any player can set the nuke off."] =
 --]]
