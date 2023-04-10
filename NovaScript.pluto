@@ -212,10 +212,6 @@ settings_main:hyperlink(T("Join The Discord Server"),"https://discord.gg/CNf6Y6U
 -------------
 --SELF LIST--
 -------------
-menu.my_root():slider("Zoom", {}, "Will only work on guns that have the zoom option.", 10, 100, 10, 1, function(count)
-    CAM.SET_FIRST_PERSON_AIM_CAM_ZOOM_FACTOR(count/10)
-end)
-
 local scaleform = require('ScaleformLib')
 local sf = scaleform('instructional_buttons')
 
