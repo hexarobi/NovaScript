@@ -273,6 +273,18 @@ trans.translations = {
         ["Aggressive Police Vehicle"] = "Agressief Politievoertuig",
         ["Safeguards Transporter"] = "Beveiligde Transporter",
         ["Will spawn a truck with a nuke in it that will explode when the truck explodes so any player can set the nuke off."] = "Zal een vrachtwagen spawnen met een atoombom erin die zal ontploffen wanneer de vrachtwagen ontploft, zodat elke speler de atoombom kan laten ontploffen.",
+        ["Banned"] = "Verbannen",
+        ["Altered Version"] = "Gewijzigde Versie",
+        ["Error With Session"] = "Fout Met Sessie",
+        ["Suspended"] = "Geschorst",
+        ["Could Not Download Files"] = "Kan Bestanden Niet Downloaden",
+        ["You have been banned from Grand Theft Auto Online permanently."] = "U bent permanent verbannen van Grand Theft Auto Online.",
+        ["You're attempting to access GTA Online servers with an altered version of the game."] = "Je probeert toegang te krijgen tot GTA Online-servers met een gewijzigde versie van de game.",
+        ["There has been an error with this session."] = "Er is een fout opgetreden bij deze sessie.",
+        ["You have been suspended from Grand Theft Auto Online Online until "] = "U bent geschorst voor Grand Theft Auto Online Online tot ",
+        [". \nIn addition, your Grand Theft Auto Online characters(s) will be reset."] = ". \nBovendien worden je Grand Theft Auto Online-personage(s) gereset.",
+        ["Could not download files from the Rockstar Games Service required to play GTA Online"] = "Kan geen bestanden downloaden van de Rockstar Games-service die nodig is om GTA Online te spelen",
+        ["Return to Grand Theft Auto V."] = "Keer terug naar Grand Theft Auto V.",
     },
     --complete--
     --german by ! N0mbyy, thanks for translating
@@ -1356,7 +1368,20 @@ trans.translations = {
         ["Turn Off Gravity"] = "关闭重力",
         ["Kind"] = "类型",
         ["Rotation Speed"] = "旋转速度",
-        ["Set Vehicle To Cam Rotation While Airborne"] = "设置载具在空中时镜头旋转",        
+        ["Set Vehicle To Cam Rotation While Airborne"] = "设置载具在空中时镜头旋转",     
+        --
+        ["Banned"] = "禁止",
+        ["Altered Version"] = "经过修改的版本",
+        ["Error With Session"] = "发生错误",
+        ["Suspended"] = "被暂停",
+        ["Could Not Download Files"] = "无法下载文件",
+        ["You have been banned from Grand Theft Auto Online permanently."] = "您已被永久禁止加入 Grand Theft Auto 在线模式。".
+        ["You're attempting to access GTA Online servers with an altered version of the game."] = "您正在尝试使用经过修改的游戏版本进入 GTA 在线模式服务器。",
+        ["There has been an error with this session."] = "加入战局时发生错误。",
+        ["You have been suspended from Grand Theft Auto Online Online until "] = "您已被禁止在 前进入 Grand Theft Auto 在线模式。",
+        [". \nIn addition, your Grand Theft Auto Online characters(s) will be reset."] = ". \n此外，您的 Grand Theft Auto 在线模式角色将被重置。",
+        ["Could not download files from the Rockstar Games Service required to play GTA Online"] = "无法从 Rockstar 游戏服务下载玩 GTA 在线模式所需的文件。",
+        ["Return to Grand Theft Auto V."] = "返回 Grand Theft Auto V.",   
     },
     --complete--
     --korean by Арена, thanks for translating--
@@ -1630,19 +1655,6 @@ trans.translations = {
         ["Aggressive Police Vehicle"] = "공격적인 경찰차",
         ["Safeguards Transporter"] = "세이프가드 트랜스포터",
         ["Will spawn a truck with a nuke in it that will explode when the truck explodes so any player can set the nuke off."] = "트럭이 폭발할 때 폭발할 핵이 있는 트럭을 만들어 플레이어가 핵을 터뜨릴 수 있도록 합니다."
-        --
-        ["Banned"] = "禁止",
-        ["Altered Version"] = "经过修改的版本",
-        ["Error With Session"] = "发生错误",
-        ["Suspended"] = "被暂停",
-        ["Could Not Download Files"] = "无法下载文件",
-        ["You have been banned from Grand Theft Auto Online permanently."] = "您已被永久禁止加入 Grand Theft Auto 在线模式。".
-        ["You're attempting to access GTA Online servers with an altered version of the game."] = "您正在尝试使用经过修改的游戏版本进入 GTA 在线模式服务器。",
-        ["There has been an error with this session."] = "加入战局时发生错误。",
-        ["You have been suspended from Grand Theft Auto Online Online until "] = "您已被禁止在 前进入 Grand Theft Auto 在线模式。",
-        [". \nIn addition, your Grand Theft Auto Online characters(s) will be reset."] = ". \n此外，您的 Grand Theft Auto 在线模式角色将被重置。",
-        ["Could not download files from the Rockstar Games Service required to play GTA Online"] = "无法从 Rockstar 游戏服务下载玩 GTA 在线模式所需的文件。",
-        ["Return to Grand Theft Auto V."] = "返回 Grand Theft Auto V.",
     },
     --completed--
     --portuguese by Erstarisk, thanks for translating--
