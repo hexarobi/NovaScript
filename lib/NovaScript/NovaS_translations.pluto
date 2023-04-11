@@ -258,7 +258,7 @@ trans.translations = {
         ["Throw Vehicle"] = "Voertuig Gooien",
         ["Throw Ped"] = "Gooi Ped",
         ["Hulk Mode"] = "Hulk Modus",
-        ["Lets you use abilities that the hulk has super jump, smash (will only work when your in the air), explosive punch and throw vehicles/peds.\nThis will also enable godmode."] = "Hiermee kun je vaardigheden gebruiken die de hulk heeft: superspringen, smashen (werkt alleen als je in de lucht bent), explosieve stoten en voertuigen/peds gooien.\nHierdoor wordt ook godmode ingeschakeld.",
+        ["Lets you use abilities that the hulk has super jump, smash (will only work when you're in the air), explosive punch and throw vehicles/peds.\nThis will also enable godmode."] = "Hiermee kun je vaardigheden gebruiken die de hulk heeft: superspringen, smashen (werkt alleen als je in de lucht bent), explosieve stoten en voertuigen/peds gooien.\nHierdoor wordt ook godmode ingeschakeld.",
         ["Show Controls"] = "Bediening Tonen",
         ["Jump Distance"] = "Sprong Afstand",
         ["Jump Height"] = "Spronghoogte",
@@ -491,7 +491,7 @@ trans.translations = {
         ["Weapon"] = "Waffe",
         ["Remove Weapon When Shooting"] = "Waffe beim Schießen entfernen",
         ["Nuke Player"] = "Nuke Spieler",
-        ["Set Nuke Explosion On Player"] = "Stellen Sie Nuke Explosion Auf Player",
+        ["Set Nuke Explosion On Player"] = "Atom Explosion auf Spieler"
         ["Tp Player"] = "Tp Spieler",
         ["Teleport To Maze Bank Helipad"] = "Teleportiere zum Maze Bank Helipad",
         ["Teleport To Mt.Chiliad"] = "Teleportiere zum Mt.Chiliad",
@@ -526,6 +526,38 @@ trans.translations = {
         ["Kind"] = "Typ",
         ["Rotation Speed"] = "ROtations Geschwindigkeit",
         ["Set Vehicle To Cam Rotation While Airborne"] = "Ändere die Fahrzeug Kamera Rotaion in der Luft",
+        ["Jump"] = "Springen",
+        ["Smash"] = "Zerschlagen",
+        ["Throw Vehicle"] = "Fahrzeug Werfen",
+        ["Throw Ped"] = "Wesen Werfen",
+        ["Hulk Mode"] = "Hulk Modus",
+        ["Lets you use abilities that the hulk has super jump, smash (will only work when you're in the air), explosive punch and throw vehicles/peds.\nThis will also enable godmode."] = "Verschafft dir die Fähigkeiten des Hulks. Enthält Super Springen, Zerstörungsschlag (funktioniert NUR wenn du in der Luft bist!), explosiver Schlag und das werfen von Fahrzeugen und Lebewesen.\nAktiviert zusätzlich auch Godmode.",
+        ["Show Controls"] = "Zeige Steuerung",
+        ["Jump Distance"] = "Sprung Distanz",
+        ["Jump Hight"] = "Sprung Höhe",
+        ["Downward Force"] = "Kraft nach unten",
+        ["Smash Radius"] = "Zerstörungsradius",
+        ["Throw Vehicle Speed"] = "Fahrzeug Wurdgeschwindigkeit",
+        ["Throw Ped Speed"] = "Lebewesen Wurfgeschwindigkeit",
+        ["Firework Gun"] = "Feuerwerks Waffe",
+        ["When holding a firework launcher u will shoot a custom firework that spits vehicles out as explosion."] = "Wenn du einen Feuerwerks Raketenwerfer in der hand hältst, wird es ein eigenes Feuerwerk erzeugen, dass Fahrzeuge Schießt",
+        ["Aim Reactions"] = "Ziel Reaktionen",
+        ["Ram Player"] = "Spieler Rammen",
+        ["Aggressive Police Vehicle"] = "Aggressives Polizei Fahrzeug",
+        ["Safeguards Transporter"] = "Sicherheits Lastwagen",
+        ["Will spawn a truck with a nuke in it that will explode when the truck explodes so any player can set the nuke off."] = "Erstellt einen LKW mit einer Atombombe die Explodiert sobald der LKW Explodiert. Kann von jedem spieler ausgelöst werden",
+        ["Banned"] = "Gebannt",
+        ["Altered Version"] = "Verämderte Version",
+        ["Error With Session"] = "Sitzungsfehler",
+        ["Suspended"] = "Ausgeschlossen",
+        ["Could Not Download Files"] = "Konnte Dateien nicht Herunterladen",
+        ["You have been banned from Grand Theft Auto Online permanently."] = "DU Wurdest Permanent aus Grand Theft Auto Online ausgeschlossen!",
+        ["You're attempting to access GTA Online servers with an altered version of the game."] = "DU versuchst GTA Online mit einer veränderten version des SPiels zu betreten",
+        ["There has been an error with this session."] = "In dieser Sitzung ist ein Fehler aufgetreten",
+        ["You have been suspended from Grand Theft Auto Online Online until "] = "Du wurdest bis zum :PUT TIME HERE: aus Grand Theft Auto Online ausgeschlossen.",
+        [". \nIn addition, your Grand Theft Auto Online characters(s) will be reset."] = ". \nDazu werden deine bestehenden Charaktere gelöscht und Zurückgesetzt.",
+        ["Could not download files from the Rockstar Games Service required to play GTA Online"] = "Konnte benötigte Dateien nicht vom Rockstar Games Server herunterladen",
+        ["Return to Grand Theft Auto V."] = "Zu Grand Theft Auto V zurückkehren"
     },
     --complete--
     --spanish by Rodri, thanks for translating
@@ -1066,14 +1098,14 @@ trans.translations = {
         ["Throw Vehicle Speed"] = "Vitesse du jet du véhicule",
         ["Throw Ped Speed"] = "Vitesse du jet du piéton",
         ["Firework Gun"] = "Arme à feu d'artifice",
-        ["When holding an firework launcher u will shoot a custom firework that spits vehicles out as explosion."] = "Lorsque vous tenez un lanceur de feux d'artifice, vous tirez un feu d'artifice personnalisé qui crache des véhicules sous forme d'explosion.",
+        ["When holding a firework launcher u will shoot a custom firework that spits vehicles out as explosion."] = "Lorsque vous tenez un lanceur de feux d'artifice, vous tirez un feu d'artifice personnalisé qui crache des véhicules sous forme d'explosion.",
         ["Aim Reactions"] = "Réaction au visée",
         ["Ram Player"] = "Bélier",
         ["Aggressive Police Vehicle"] = "Véhicule de police agressif",
         ["Safeguards Transporter"] = "Camion nucléaire",
         ["Will spawn a truck with a nuke in it that will explode when the truck explodes so any player can set the nuke off."] = "Fera apparaître un camion contenant une bombe nucléaire qui explosera lorsque le camion explosera afin que n'importe quel joueur puisse déclencher la bombe nucléaire.",
     },
-    --complete--
+    --not complete--
     --chinese by lu_zi, thanks for translating--
     zh = {
         ["Self"] = "自我",
@@ -1324,8 +1356,7 @@ trans.translations = {
         ["Turn Off Gravity"] = "关闭重力",
         ["Kind"] = "类型",
         ["Rotation Speed"] = "旋转速度",
-        ["Set Vehicle To Cam Rotation While Airborne"] = "设置载具在空中时镜头旋转",
-                 
+        ["Set Vehicle To Cam Rotation While Airborne"] = "设置载具在空中时镜头旋转",        
     },
     --complete--
     --korean by Арена, thanks for translating--
@@ -1599,6 +1630,19 @@ trans.translations = {
         ["Aggressive Police Vehicle"] = "공격적인 경찰차",
         ["Safeguards Transporter"] = "세이프가드 트랜스포터",
         ["Will spawn a truck with a nuke in it that will explode when the truck explodes so any player can set the nuke off."] = "트럭이 폭발할 때 폭발할 핵이 있는 트럭을 만들어 플레이어가 핵을 터뜨릴 수 있도록 합니다."
+        --
+        ["Banned"] = "禁止",
+        ["Altered Version"] = "经过修改的版本",
+        ["Error With Session"] = "发生错误",
+        ["Suspended"] = "被暂停",
+        ["Could Not Download Files"] = "无法下载文件",
+        ["You have been banned from Grand Theft Auto Online permanently."] = "您已被永久禁止加入 Grand Theft Auto 在线模式。".
+        ["You're attempting to access GTA Online servers with an altered version of the game."] = "您正在尝试使用经过修改的游戏版本进入 GTA 在线模式服务器。",
+        ["There has been an error with this session."] = "加入战局时发生错误。",
+        ["You have been suspended from Grand Theft Auto Online Online until "] = "您已被禁止在 前进入 Grand Theft Auto 在线模式。",
+        [". \nIn addition, your Grand Theft Auto Online characters(s) will be reset."] = ". \n此外，您的 Grand Theft Auto 在线模式角色将被重置。",
+        ["Could not download files from the Rockstar Games Service required to play GTA Online"] = "无法从 Rockstar 游戏服务下载玩 GTA 在线模式所需的文件。",
+        ["Return to Grand Theft Auto V."] = "返回 Grand Theft Auto V.",
     },
     --completed--
     --portuguese by Erstarisk, thanks for translating--
@@ -2139,12 +2183,24 @@ trans.translations = {
         ["Throw Vehicle Speed"] = "Siła Rzutu Pojazdem",
         ["Throw Ped Speed"] = "Siła Rzutu Przechodniem",
         ["Firework Gun"] = "Broń Pirotechniczna",
-        ["When holding an firework launcher u will shoot a custom firework that spits vehicles out as explosion."] = "Podczas korzystania z wyrzutni fajerwerków, wystrzeliwujesz specjalne fajerwerki, które wybuchając uwalniają pojazdy.",
+        ["When holding a firework launcher u will shoot a custom firework that spits vehicles out as explosion."] = "Podczas korzystania z wyrzutni fajerwerków, wystrzeliwujesz specjalne fajerwerki, które wybuchając uwalniają pojazdy.",
         ["Aim Reactions"] = "Reakcja na Celowanie",
         ["Ram Player"] = "Staranuj",
         ["Aggressive Police Vehicle"] = "Agresywny Pojazd Policyjny",
         ["Safeguards Transporter"] = "Stwórz Ciężarówkę z Ładunkiem",
         ["Will spawn a truck with a nuke in it that will explode when the truck explodes so any player can set the nuke off."] = "Powoduje pojawienie się ciężarówki z ładunkiem atomowym, który eksploduje wraz z ciężarówką, więc każdy gracz jest w stanie wywołać tę eksplozję.",
+        ["Banned"] = "Banido",
+        ["Altered Version"] = "Versão Alterada",
+        ["Error With Session"] = "Erro com a Sessão",
+        ["Suspended"] = "Suspenso",
+        ["Could Not Download Files"] = "Não Foi Possível Baixar Arquivos",
+        ["You have been banned from Grand Theft Auto Online permanently."] = "Você foi banido permanentemente do Grand Theft Auto Online.",
+        ["You're attempting to access GTA Online servers with an altered version of the game."] = "Você está tentando acessar os servidores do GTA Online com uma versão alterada do jogo.",
+        ["There has been an error with this session."] = "Ocorreu um erro com esta sessão.",
+        ["You have been suspended from Grand Theft Auto Online Online until "] = "Você foi suspenso do Grand Theft Auto Online Online até ",
+        [". \nIn addition, your Grand Theft Auto Online characters(s) will be reset."] = ". \nAlém disso, seus personagens do Grand Theft Auto Online serão redefinidos.",
+        ["Could not download files from the Rockstar Games Service required to play GTA Online"] = "Não foi possível baixar os arquivos do Rockstar Games Service necessários para jogar GTA Online",
+        ["Return to Grand Theft Auto V."] = "Volte para Grand Theft Auto V.",
     }
 }
 

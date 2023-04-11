@@ -737,7 +737,7 @@ error_list:text_input(T("Custom Error"), {"custom_error_text"}, "", function(inp
     custom_error = input
 end)
 
-local error_types = {"Banned", "Altered Version", "Error With Session", "Suspended", "Could Not Download Files", "Custom"}
+local error_types = {T("Banned"), T("Altered Version"), T("Error With Session"), T("Suspended"), T("Could Not Download Files"), T("Custom")}
 local error_number = 1
 error_list:list_select(T("Error Type"), {}, "",  error_types, 1, function(index)
     error_number = index
@@ -746,11 +746,11 @@ end)
 --got help from this website "https://vespura.com/fivem/scaleform/#POPUP_WARNING" helps alot if anyone needs it--
 error_list:toggle(T("Error Screen"), {}, "", function(on)
     local errors = {
-        "You have been banned from Grand Theft Auto Online permanently.",
-        "You're attempting to access GTA Online servers with an altered version of the game.",
-        "There has been an error with this session.",
-        "You have been suspended from Grand Theft Auto Online Online until ".. os.date("%m/%d/%Y", os.time() + 2700000) ..". \nIn addition, your Grand Theft Auto Online characters(s) will be reset.",
-        "Could not download files from the Rockstar Games Service required to play GTA Online",
+        T("You have been banned from Grand Theft Auto Online permanently."),
+        T("You're attempting to access GTA Online servers with an altered version of the game."),
+        T("There has been an error with this session."),
+        T("You have been suspended from Grand Theft Auto Online Online until ").. os.date("%m/%d/%Y", os.time() + 2700000) ..T(". \nIn addition, your Grand Theft Auto Online characters(s) will be reset."),
+        T("Could not download files from the Rockstar Games Service required to play GTA Online"),
         custom_error
     }
 
