@@ -446,33 +446,6 @@ self_main:action(T("Enter Nearest Vehicle"), {}, "", function()
 	end
 end)
 
-function toggleCamDelay(enable)
-    local cam = CAM.GET_RENDERING_CAM()
-
-    -- Set the camera delay to 500ms (0.5 seconds)
-    local delayTime = enable and 500 or 0
-
-    -- Set the camera smoothing style to enable or disable the camera delay effect
-    local smoothingStyle = enable and 24 or 0
-    CAM.SET_CAM_SMOOTHING_STYLE(cam, smoothingStyle)
-
-    -- Optionally, you can also adjust the camera's smoothness settings to further customize the effect
-    if enable then
-        CAM.SET_CAM_SMOOTHING_MAX_SPEED(cam, 1.0)
-        CAM.SET_CAM_SMOOTHING_TIME(cam, 0.5)
-    end
-end
-
---enter nearest vehicle--
-self_main:toggle("toggle", {}, "", function(on)
-    if on then
-        toggleCamDelay(true)
-    end
-    if not on then
-        toggleCamDelay(false)
-    end
-end)
-
 --go to nearest player--
 self_main:action(T("Go To Nearest Player"), {}, "", function()
 	local user_pos = players.get_position(players.user())
