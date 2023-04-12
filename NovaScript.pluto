@@ -1,6 +1,8 @@
 --script made by Nova_plays#9126 if you need any help join my discord server https://discord.gg/CNf6Y6Uw--
 --credits to all the people that helped me :D--
 
+--updated--
+
 --auto updater from hexarobi--
 local status, auto_updater = pcall(require, "auto-updater")
 if not status then
