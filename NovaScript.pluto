@@ -161,6 +161,17 @@ settings_main:toggle(T("No Notifications"), {}, "", function(on)
 end)
 
 settings_main:action(T("Check for Update"), {}, T("The script will automatically check for updates at most daily, but you can manually check using this option anytime."), function()
+    for i, file_path in ipairs(file_paths) do
+        if filesystem.exists(file_path) then
+            if file_path:sub(-4) == ".lua" then
+                local new_path = file_path:sub(1, -5) .. ".pluto"
+                if not filesystem.exists(new_path) then
+                    os.rename(file_path, new_path)
+                end
+            end
+        end
+    end
+    util.yield(500)
     auto_update_config.check_interval = 0
     if auto_updater.run_auto_update(auto_update_config) then
         notify(T("No updates found"), notif_off)
