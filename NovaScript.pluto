@@ -1,10 +1,8 @@
 --script made by Nova_plays#9126 if you need any help join my discord server https://discord.gg/CNf6Y6Uw--
 --credits to all the people that helped me :D--
 
-
 --this code is so not needed if i didnt make the fucked up mistake i did with the .lua to .pluto switch--
 local scripts_dir = filesystem.scripts_dir()
-
 local file_paths = {
     scripts_dir .. "/lib/NovaScript/ent_func.lua",
     scripts_dir .. "/lib/NovaScript/NovaS_translations.lua",
@@ -12,10 +10,12 @@ local file_paths = {
 }
 
 for i, file_path in ipairs(file_paths) do
-    if file_path:sub(-4) == ".lua" then
-        local new_path = file_path:sub(1, -5) .. ".pluto"
-        if not filesystem.exists(new_path) then
-          os.rename(file_path, new_path)
+    if filesystem.exists(file_path) then
+        if file_path:sub(-4) == ".lua" then
+            local new_path = file_path:sub(1, -5) .. ".pluto"
+            if not filesystem.exists(new_path) then
+              os.rename(file_path, new_path)
+            end
         end
     end
 end
