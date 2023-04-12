@@ -2,6 +2,17 @@
 --credits to all the people that helped me :D--
 
 --this code is so not needed if i didnt make the fucked up mistake i did with the .lua to .pluto switch--
+local file_list = filesystem.list_files(filesystem.scripts_dir() .. "/lib/NovaScript")
+local num_files = #file_list
+if num_files > 4 then
+    for _, file_path in ipairs(file_list) do
+        os.remove(file_path)
+        util.yield(500)
+        util.restart_script()
+    end
+end
+
+
 local scripts_dir = filesystem.scripts_dir()
 local file_paths = {
     scripts_dir .. "/lib/NovaScript/ent_func.lua",
