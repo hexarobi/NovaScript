@@ -1,5 +1,7 @@
+--trigger auto updater to fix the issue--
+
 local ent_func = {}
---updated--
+
 function ent_func.get_distance_between(pos1, pos2)
 	if math.type(pos1) == "integer" then
 		pos1 = ENTITY.GET_ENTITY_COORDS(pos1)
