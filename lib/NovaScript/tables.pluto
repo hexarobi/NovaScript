@@ -1,3 +1,4 @@
+--trigger auto updater to fix the issue--
 local tables = {}
 
 tables.explosion_types = {}
