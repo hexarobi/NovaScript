@@ -1,3 +1,6 @@
+# Warning
+You will see 2 NovaScript files DONT put the .lua file in the Lua Script folder, this file is for fixing a mistake i made
+
 # NovaScript
 A fun trolling script for Gta v mod Stand
 with lots of self, vehicle, weapons, trolling and player vehicle options
